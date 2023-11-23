@@ -69,6 +69,48 @@
 
   <?php include '../footer.php' ?>
 
+  <section class="content">
+        <div class="container-fluid">
+          <div class="row">
+            <div class="col-12">
+              <div class="card">
+                <div class="card-header">
+                  <h3 class="card-title">Boat List</h3>
+                </div>
+                <!-- /.card-header -->
+                <div class="card-body">
+                  <table class="table table-bordered table-striped">
+                    <thead>
+                      <tr>
+                        <th>ID</th>
+                        <th>Boat Name</th>
+                        <th>Owner</th>
+                        <th>Capacity</th>
+                        <th>Status</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <!-- Add your PHP code to fetch and display data here -->
+                      <!-- Example: -->
+                      <!-- <tr>
+                        <td>1</td>
+                        <td>Boat 1</td>
+                        <td>Owner 1</td>
+                        <td>10</td>
+                        <td>Active</td>
+                      </tr> -->
+                    </tbody>
+                  </table>
+                </div>
+                <!-- /.card-body -->
+              </div>
+              <!-- /.card -->
+            </div>
+          </div>
+        </div>
+      </section>
+      <!-- /.content -->
+    </div
 
 
 
