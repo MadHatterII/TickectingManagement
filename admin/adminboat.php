@@ -36,7 +36,6 @@
     color: #fff;
   }
 
-
   .btn-available {
     background-color: #3498db; /* Blue color for returned status */
             color: #fff;
