@@ -35,13 +35,6 @@
     background-color: #3ea175; /* Header background color */
     color: #fff;
   }
-  .status.available {
-
-  }
-
-  .status.not-available {
-
-  }
 
   .btn-available {
     background-color: #3498db; /* Blue color for returned status */
