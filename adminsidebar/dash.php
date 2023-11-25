@@ -70,9 +70,9 @@
                                             <i class="far fa-circle nav-icon"></i>
                                             <p>Boat</p>
                                         </a>
-                                    </li>
+                                    </li>   
                                     <li class="nav-item">
-                                        <a href="pages/search/enhanced.html" class="nav-link">
+                                        <a href="admincottage.php" class="nav-link">
                                             <i class="far fa-circle nav-icon"></i>
                                             <p>Cottage</p>
                                         </a>

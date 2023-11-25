@@ -51,6 +51,8 @@ include 'countcard.php';
         object-fit: cover;
         margin-bottom: 10px;
     }
+    
+    
 </style>
 
 <body class="hold-transition sidebar-mini layout-fixed">

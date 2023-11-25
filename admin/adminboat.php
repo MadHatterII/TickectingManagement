@@ -3,7 +3,8 @@
 
 <head>
   <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
   <title>Admin  | Prices</title>
 
 
@@ -35,26 +36,34 @@
     background-color: #3ea175; /* Header background color */
     color: #fff;
   }
-
-  .btn-available {
-    background-color: #3498db; /* Blue color for returned status */
-            color: #fff;
-            cursor: pointer;
-            border: none;
+  .status{
+    cursor: pointer;
             padding: 5px 10px;
+            border: none;
             border-radius: 4px;
             font-weight: bold;
   }
 
-  .btn-not-available {
-    background-color: #e74c3c; /* Red color for borrowed status */
-            color: #fff;
-            cursor: pointer;
-            border: none;
-            padding: 5px 10px;
-            border-radius: 4px;
-            font-weight: bold;
+ 
+  @media (max-width: 767px) {
+  /* Styles for screens smaller than 768px wide */
+
+  /* Adjust the font size for better readability on small screens */
+  body {
+    font-size: 14px;
   }
+
+  /* Make the sidebar and content full-width for better mobile experience */
+  .sidebar, .content-wrapper {
+    width: 100%;
+  }
+
+  /* Hide some elements or reduce their size to save space */
+  /* .navbar {
+    display: none; /* or adjust as needed */
+  } 
+
+
 </style>
 
 <body class="hold-transition sidebar-mini layout-fixed">
@@ -105,6 +114,7 @@
                           echo "<td>{$row['boatName']}</td>";
                           echo "<td>{$row['owners_name']}</td>";
                           echo "<td>{$row['capacity']}</td>";
+                          
                           echo "<td class='status' data-boat-id='{$row['id']}' data-current-status='{$row['boat_status']}'>{$row['boat_status']}</td>";
                           echo "</tr>";
                         }
