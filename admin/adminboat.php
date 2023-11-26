@@ -53,7 +53,7 @@
   body {
     font-size: 14px;
   }
-=======
+
 /* >>>>>>> main */
 
   /* Make the sidebar and content full-width for better mobile experience */

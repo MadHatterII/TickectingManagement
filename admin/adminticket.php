@@ -44,15 +44,73 @@ include 'countcard.php';
         color: black;
     }
 
-    .user-image {
-        width: 100px;
-        height: 100px;
-        border-radius: 50%;
-        object-fit: cover;
-        margin-bottom: 10px;
+
+
+    /* Additional styles for the modal */
+    #modal-default .modal-content {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+        font-family: system-ui;
+        text-transform: capitalize;
+        text-align: center;
+        padding: 20px 30px;
+        border-radius: 20px;
+        border: 1px rgba(211, 211, 211, 0.486) solid;
+        transition: 0.6s;
     }
-    
-    
+
+    #viewModalBody {
+        text-align: center;
+        color: #333;
+    }
+
+    .user-details {
+        text-align: left;
+        /* Adjust this if you want the details to be left-aligned */
+        color: #333;
+    }
+
+    .user-details p {
+        display: list-item;
+        margin-right: 20px;
+        /* Adjust the spacing between values */
+    }
+
+    .user-details img {
+        display: block;
+        margin: 0 auto;
+        /* Center-align the image */
+    }
+
+    #modal-default .modal-content:hover {
+        transition: 0.6s;
+        box-shadow: 5px 5px 20px;
+    }
+
+    #modal-default .modal-content img {
+        transition: 0.2s;
+        width: 120px;
+        border-radius: 50%;
+        margin-bottom: 10px;
+        padding: 2px;
+    }
+
+    #modal-default .modal-content:hover img {
+        transition: 0.2s;
+        outline: 4px solid grey;
+    }
+
+    #modal-default .modal-content p {
+        color: #333;
+    }
+
+    #modal-default .modal-header {
+        background-color: #007bff;
+        /* Change header background color as needed */
+        color: #ffffff;
+        /* Change header text color as needed */
+    }
 </style>
 
 <body class="hold-transition sidebar-mini layout-fixed">
@@ -119,7 +177,7 @@ include 'countcard.php';
                                 <div class="icon">
                                     <i class="fas fa-ship"></i>
                                 </div>
-                                <a href="#" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
+                                <a href="adminboat.php" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
                             </div>
 
                         </div>
@@ -134,7 +192,7 @@ include 'countcard.php';
                                 <div class="icon">
                                     <i class="fas fa-home"></i>
                                 </div>
-                                <a href="#" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
+                                <a href="admincottage.php" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
                             </div>
 
                         </div>
@@ -149,7 +207,7 @@ include 'countcard.php';
                                 <div class="icon">
                                     <i class="fas fa-user-secret"></i>
                                 </div>
-                                <a href="#" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
+                                <a href="adminticket.php" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
                             </div>
 
                         </div>
@@ -159,14 +217,27 @@ include 'countcard.php';
                     <?php
                     include '../connection/connection.php';
 
-                    // Fetch and display all registered accounts from the database
-                    $sql = "SELECT FirstName, LastName, Email, Username, agentID,Role, PhoneNumber FROM Useraccounts";
+                    // Define the number of rows per page
+                    $rowsPerPage = 5;
+
+                    // Calculate the OFFSET based on the current page
+                    $page = isset($_GET['page']) ? $_GET['page'] : 1;
+                    $offset = ($page - 1) * $rowsPerPage;
+
+                    // Fetch and display all registered accounts from the database with pagination
+                    $sql = "SELECT FirstName, LastName, Email, Username, agentID, Role, PhoneNumber FROM Useraccounts ORDER BY agentID DESC LIMIT $rowsPerPage OFFSET $offset";
                     $result = mysqli_query($conn, $sql);
 
                     // Check if the query was successful
                     if (!$result) {
                         die("Error: " . mysqli_error($conn));
                     }
+
+                    // Calculate the total number of rows in the table
+                    $totalRows = mysqli_num_rows(mysqli_query($conn, "SELECT * FROM Useraccounts"));
+
+                    // Calculate the total number of pages
+                    $totalPages = ceil($totalRows / $rowsPerPage);
 
                     ?>
 
@@ -209,7 +280,7 @@ include 'countcard.php';
                                 </thead>
                                 <tbody>
                                     <?php
-                                    $rowNumber = 1;
+                                    $rowNumber = ($page - 1) * $rowsPerPage + 1;
 
                                     while ($row = mysqli_fetch_assoc($result)) {
                                         echo "<tr>";
@@ -220,120 +291,66 @@ include 'countcard.php';
                                         echo "<td>" . $row['Email'] . "</td>";
                                         echo "<td>" . $row['PhoneNumber'] . "</td>";
 
+                                        // Pass user details as data attributes
                                         echo '<td class="project-actions text-right">
-                                                <a class="btn btn-primary btn-sm" href="#">
-                                                    <i class="fas fa-folder"></i> View
-                                                </a>
-                                                <a class="btn btn-info btn-sm UpdateBtn" data-toggle="modal"  data-target="#modal-xl" href="#" data-agentid="' . $row['agentID'] . '">
-                                                <i class="fas fa-pencil-alt"></i> Edit
-                                                 </a>
-                                            
-                                                <a class="btn btn-danger btn-sm" href="../adminprocess/deleteuser.php?agentid=' . $row['agentID'] . '">
-                                                    <i class="fas fa-trash"></i> Delete
-                                                </a>
-                                            </td>';
+                                        <a class="btn btn-primary btn-sm viewBtn" href="#" data-toggle="modal" data-target="#modal-default"
+                                        data-agentid="' . $row['agentID'] . '">
+                                            <i class="fas fa-folder"></i> View
+                                        </a>
+                                        <a class="btn btn-info btn-sm UpdateBtn" data-toggle="modal" data-target="#modal-xl" href="#" data-agentid="' . $row['agentID'] . '">
+                                        <i class="fas fa-pencil-alt"></i> Edit
+                                        </a>
+
+                                        <a class="btn btn-danger btn-sm" href="../adminprocess/deleteuser.php?agentid=' . $row['agentID'] . '">
+                                            <i class="fas fa-trash"></i> Delete
+                                        </a>
+                                    </td>';
 
                                         echo "</tr>";
 
                                         $rowNumber++;
                                     }
                                     ?>
-
-                                    </tr>
-
-
-                                    <div class="modal fade" id="modal-xl">
-                                        <div class="modal-dialog modal-xl">
-                                            <div class="modal-content">
-                                                <div class="modal-header">
-                                                    <h4 class="modal-title">Edit Profile</h4>
-                                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                                        <span aria-hidden="true">&times;</span>
-                                                    </button>
-                                                </div>
-                                                <div class="modal-body">
-                                                    <form id="editform" action="../adminprocess/updateagent.php" method="POST" enctype="multipart/form-data">
-                                                        <div class="row">
-                                                            <div class="col-md-6">
-                                                                <input type="hidden" name="agentID" id="editAgentID">
-                                                                <div class="form-group">
-                                                                    <label for="firstName">First Name</label>
-                                                                    <input type="text" class="form-control" id="firstName" name="firstName" placeholder="Enter first name">
-                                                                </div>
-                                                            </div>
-                                                            <div class="col-md-6">
-                                                                <div class="form-group">
-                                                                    <label for="lastName">Last Name</label>
-                                                                    <input type="text" class="form-control" id="lastName" name="lastName" placeholder="Enter last name">
-                                                                </div>
-                                                            </div>
-                                                            <div class="col-md-6">
-                                                                <div class="form-group">
-                                                                    <label for="phoneNumber">Phone Number</label>
-                                                                    <input type="tel" class="form-control" id="phoneNumber" name="phoneNumber" placeholder="Enter phone number">
-                                                                </div>
-                                                            </div>
-                                                            <div class="col-md-6">
-                                                                <div class="form-group">
-                                                                    <label for="birthdate">Birthday</label>
-                                                                    <input type="date" class="form-control" id="birthdate" name="birthdate" placeholder="Enter birthdate">
-                                                                </div>
-                                                            </div>
-                                                            <div class="col-md-6">
-                                                                <div class="form-group">
-                                                                    <label for="address">Address</label>
-                                                                    <input type="text" class="form-control" id="address" name="address" placeholder="Enter address">
-                                                                </div>
-                                                            </div>
-                                                            <div class="col-md-6">
-                                                                <div class="form-group">
-                                                                    <label for="email">Email address</label>
-                                                                    <input type="email" class="form-control" id="email" name="email" placeholder="Enter email">
-                                                                </div>
-                                                            </div>
-                                                            <div class="col-md-6">
-                                                                <div class="form-group">
-                                                                    <label for="username">Username</label>
-                                                                    <input type="text" class="form-control" id="username" name="username" placeholder="Enter username">
-                                                                </div>
-                                                            </div>
-                                                            <div class="col-md-6">
-                                                                <div class="form-group">
-                                                                    <label for="password">Password</label>
-                                                                    <input type="password" class="form-control" id="password" name="password" placeholder="Enter password">
-                                                                </div>
-                                                            </div>
-                                                            <div class="col-md-6">
-                                                                <div class="form-group">
-                                                                    <label for="file">Upload Profile</label>
-                                                                    <div class="input-group">
-                                                                        <div class="custom-file">
-                                                                            <input type="file" class="custom-file-input" id="file" name="file">
-                                                                            <label class="custom-file-label" for="exampleInputFile">Choose file</label>
-                                                                        </div>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                    </form>
-                                                </div>
-                                                <div class="modal-footer justify-content-between">
-                                                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                                                    <button type="button" class="btn btn-info btn-sm" id="updateBtn">Update</button>
-                                                    <!-- <a class="btn btn-info btn-sm UpdateBtn" data-toggle="modal" data-target="#modal-xl" href="#" data-agentid="' . $row['agentID'] . '">
-                        <i class="fas fa-pencil-alt"></i> Edit
-                    </a> -->
-
-
-                                                </div>
-                                            </div>
-                                            <!-- /.modal-content -->
-                                        </div>
-                                        <!-- /.modal-dialog -->
-                                    </div>
-                                    <!-- /.modal -->
                                 </tbody>
                             </table>
+
+
+                            <!-- Pagination links -->
+                            <div class="card-tools">
+                                <ul class="pagination pagination-sm float-right">
+                                    <?php
+                                    // Display previous page link
+                                    if ($page > 1) {
+                                        echo '<li class="page-item"><a class="page-link" href="?page=' . ($page - 1) . '">&laquo;</a></li>';
+                                    } else {
+                                        echo '<li class="page-item disabled"><span class="page-link">&laquo;</span></li>';
+                                    }
+
+                                    // Display page links
+                                    for ($i = 1; $i <= $totalPages; $i++) {
+                                        echo '<li class="page-item';
+                                        if ($i == $page) {
+                                            echo ' active';
+                                        }
+                                        echo '"><a class="page-link" href="?page=' . $i . '">' . $i . '</a></li>';
+                                    }
+
+                                    // Display next page link
+                                    if ($page < $totalPages) {
+                                        echo '<li class="page-item"><a class="page-link" href="?page=' . ($page + 1) . '">&raquo;</a></li>';
+                                    } else {
+                                        echo '<li class="page-item disabled"><span class="page-link">&raquo;</span></li>';
+                                    }
+                                    ?>
+                                </ul>
+                            </div>
+
+                            <?php
+                            // Close your database connection
+                            mysqli_close($conn);
+                            ?>
+
+
                         </div>
 
                         <!-- /.card-body -->
@@ -355,7 +372,93 @@ include 'countcard.php';
 
     </div>
     <!-- ./wrapper -->
+    <!-- Updated modal -->
+    <div class="modal fade" id="modal-xl">
+        <div class="modal-dialog modal-xl">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title">Edit Profile</h4>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form id="editform" action="../adminprocess/updateagent.php" method="POST" enctype="multipart/form-data">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <input type="hidden" name="agentID" id="editAgentID">
+                                <div class="form-group">
+                                    <label for="firstName">First Name</label>
+                                    <input type="text" class="form-control" id="firstName" name="firstName" placeholder="Enter first name">
+                                </div>
+                            </div>
+                            <!-- Include other form fields as needed -->
 
+                            <!-- Password field -->
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="password">New Password</label>
+                                    <input type="text" class="form-control" id="password" name="password" placeholder="Enter new password">
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="lastName">Last Name</label>
+                                    <input type="text" class="form-control" id="lastName" name="lastName" placeholder="Enter last name">
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="phoneNumber">Phone Number</label>
+                                    <input type="tel" class="form-control" id="phoneNumber" name="phoneNumber" placeholder="Enter phone number">
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="birthdate">Birthday</label>
+                                    <input type="date" class="form-control" id="birthdate" name="birthdate" placeholder="Enter birthdate">
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="address">Address</label>
+                                    <input type="text" class="form-control" id="address" name="address" placeholder="Enter address">
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="email">Email address</label>
+                                    <input type="email" class="form-control" id="email" name="email" placeholder="Enter email">
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="username">Username</label>
+                                    <input type="text" class="form-control" id="username" name="username" placeholder="Enter username">
+                                </div>
+                            </div>
+                            <!-- File input with dynamic label -->
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="file">Upload Profile</label>
+                                    <div class="input-group">
+                                        <div class="custom-file">
+                                            <input type="file" class="custom-file-input" id="file" name="file">
+                                            <label class="custom-file-label" for="file">Choose file</label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer justify-content-between">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-info btn-sm" id="updateBtn">Update</button>
+                </div>
+            </div>
+        </div>
+    </div>
 
 
     <div class="modal fade" id="modal-lg">
@@ -457,7 +560,25 @@ include 'countcard.php';
     </div>
 
 
+    <div class="modal fade" id="modal-default">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="">
+                    <h4 class="modal-title">User Profile</h4>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body" id="viewModalBody">
+                    <!-- AJAX content will be loaded here -->
+                </div>
+                <div class="modal-footer justify-content-between">
+                    <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
 
+                </div>
+            </div>
+        </div>
+    </div>
 
 
 
@@ -486,29 +607,39 @@ include 'countcard.php';
                 // Make an AJAX request to fetch data for the specified agentID
                 $.ajax({
                     type: 'POST',
-                    url: '../adminprocess/fetchdata.php', // Replace with the actual server endpoint
+                    url: '../adminprocess/get_user_edit.php', // Update with the correct path
                     data: {
                         agentID: agentID
                     },
                     success: function(response) {
                         console.log('Response:', response);
 
-                        // Assuming your server returns a JSON object with user data
-                        var userData = JSON.parse(response);
-                        console.log('User Data:', userData);
+                        try {
+                            // Attempt to parse the response as JSON
+                            var userData = JSON.parse(response);
 
-                        // Populate the form fields with the retrieved data
-                        $('#firstName').val(userData.firstName);
-                        $('#lastName').val(userData.lastName);
-                        $('#phoneNumber').val(userData.phoneNumber);
-                        $('#birthdate').val(userData.birthdate);
-                        $('#address').val(userData.address);
-                        $('#email').val(userData.email);
-                        $('#username').val(userData.username);
-                        // Password field might not be pre-filled for security reasons
+                            // Check if userData is not null and contains the expected properties
+                            if (userData && userData.FirstName !== undefined && userData.LastName !== undefined) {
+                                // Populate the form fields with the retrieved data
+                                $('#firstName').val(userData.FirstName);
+                                $('#lastName').val(userData.LastName);
+                                $('#phoneNumber').val(userData.PhoneNumber);
+                                $('#birthdate').val(userData.Birthdate);
+                                $('#address').val(userData.Address);
+                                $('#email').val(userData.Email);
+                                $('#username').val(userData.Username);
+                                $('#password').val(userData.Password); // Assuming password is included in the JSON
 
-                        // Open the modal
-                        $('#modal-xl').modal('show');
+                                // Open the modal
+                                $('#modal-xl').modal('show');
+                            } else {
+                                console.error('Invalid user data format:', userData);
+                                // Add additional error handling if needed
+                            }
+                        } catch (error) {
+                            console.error('Error parsing JSON:', error);
+                            // Add additional error handling if needed
+                        }
                     },
                     error: function(error) {
                         console.log('Error fetching user data:', error);
@@ -536,6 +667,26 @@ include 'countcard.php';
                     },
                     error: function(error) {
                         console.log('Error:', error);
+                    }
+                });
+            });
+        });
+
+
+
+        $(document).ready(function() {
+            // AJAX function to fetch user details and update modal content
+            $('.viewBtn').click(function() {
+                var agentID = $(this).data('agentid');
+
+                $.ajax({
+                    type: 'POST',
+                    url: '../adminprocess/get_user_details.php', // Create a new PHP file for this purpose
+                    data: {
+                        agentID: agentID
+                    },
+                    success: function(data) {
+                        $('#viewModalBody').html(data);
                     }
                 });
             });
