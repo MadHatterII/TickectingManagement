@@ -42,9 +42,9 @@
     <div class="wrapper">
 
         <!-- Preloader -->
-        <!-- <div class="preloader flex-column justify-content-center align-items-center">
-      <img class="animation__shake" src="../dist/img/AdminLTELogo.png" alt="AdminLTELogo" height="60" width="60">
-    </div> -->
+        <div class="preloader flex-column justify-content-center align-items-center">
+            <img class="animation__shake" src="../dist/img/AdminLTELogo.png" alt="AdminLTELogo" height="60" width="60">
+        </div>
 
         <?php include '../userside/nav.php'; ?>
 
@@ -85,23 +85,23 @@
                             </a>
                             <ul class="nav nav-treeview">
                                 <li class="nav-item">
-                                    <a href="adminhome.php" class="nav-link active">
+                                    <a href="userdash.php" class="nav-link ">
                                         <i class="far fa-circle nav-icon"></i>
                                         <p>Dashboard </p>
                                     </a>
                                 </li>
                                 <li class="nav-item">
-                                    <a href="adminticket.php" class="nav-link">
+                                    <a href="userticket.php" class="nav-link active">
                                         <i class="far fa-user nav-icon"></i>
                                         <p> Agent Management</p>
                                     </a>
                                 </li>
-                                <li class="nav-item">
+                                <!-- <li class="nav-item">
                                     <a href="adminprice.php" class="nav-link">
                                         <i class="fas fa-money-bill nav-icon"></i>
                                         <p>Price Management</p>
                                     </a>
-                                </li>
+                                </li> -->
 
                             </ul>
                         </li>
@@ -116,13 +116,13 @@
                             </a>
                             <ul class="nav nav-treeview">
                                 <li class="nav-item">
-                                    <a href="adminboat.php" class="nav-link">
+                                    <a href="userboat.php" class="nav-link">
                                         <i class="far fa-circle nav-icon"></i>
                                         <p>Boat</p>
                                     </a>
                                 </li>
                                 <li class="nav-item">
-                                    <a href="pages/search/enhanced.html" class="nav-link">
+                                    <a href="usercottage.php" class="nav-link">
                                         <i class="far fa-circle nav-icon"></i>
                                         <p>Cottage</p>
                                     </a>

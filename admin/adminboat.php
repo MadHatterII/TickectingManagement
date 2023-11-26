@@ -36,6 +36,7 @@
     background-color: #3ea175; /* Header background color */
     color: #fff;
   }
+/* <<<<<<< Gadiz */
   .status{
     cursor: pointer;
             padding: 5px 10px;
@@ -52,6 +53,8 @@
   body {
     font-size: 14px;
   }
+=======
+/* >>>>>>> main */
 
   /* Make the sidebar and content full-width for better mobile experience */
   .sidebar, .content-wrapper {
