@@ -43,7 +43,8 @@
         <?php include '../userside/nav.php'; ?>
 
         <!-- Main Sidebar Container -->
-        <aside class="main-sidebar sidebar-dark-primary elevation-4">
+    <!-- Main Sidebar Container -->
+    <aside class="main-sidebar sidebar-dark-primary elevation-4">
             <!-- Brand Logo -->
             <a href="adminhome.php" class="brand-link">
                 <img src="../img/slsulogo.png" alt="AdminLTE Logo" class="brand-image img-circle elevation-3" style="opacity: 1">
@@ -69,7 +70,7 @@
                     <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
                         <!-- Add icons to the links using the .nav-icon class
                with font-awesome or any other icon font library -->
-                        <li class="nav-item">
+                        <li class="nav-item menu-open">
                             <a href="#" class="nav-link">
                                 <i class="nav-icon fas fa-tachometer-alt"></i>
                                 <p>
@@ -85,22 +86,16 @@
                                     </a>
                                 </li>
                                 <li class="nav-item">
-                                    <a href="userticket.php" class="nav-link">
-                                        <i class="far fa-user nav-icon"></i>
-                                        <p>Ticket Form</p>
-                                    </a>
-                                </li>
-                                <!-- <li class="nav-item">
-                                    <a href="adminprice.php" class="nav-link">
-                                        <i class="fas fa-money-bill nav-icon"></i>
-                                        <p>Price Management</p>
-                                    </a>
-                                </li> -->
+                                        <a href="userticket.php" class="nav-link" >
+                                            <i class="far fa-user nav-icon"></i>
+                                            <p>Ticket Form</p>
+                                        </a>
+                                    </li>
+                                    
+                                </ul>
+                            </li>
 
-                            </ul>
-                        </li>
-
-                        <li class="nav-item  menu-open">
+                        <li class="nav-item">
                             <a href="#" class="nav-link">
                                 <i class="far fa-check-circle nav-icon"></i>
                                 <p>
@@ -123,7 +118,7 @@
                                 </li>
                             </ul>
                         </li>
-                        <li class="nav-header">Other</li>
+                        <li class="nav-header">MISCELLANEOUS</li>
 
 
 
@@ -253,7 +248,7 @@
     <?php include '../footer.php' ?>
 
 
-    </div>
+    
     <!-- ./wrapper -->
 
 

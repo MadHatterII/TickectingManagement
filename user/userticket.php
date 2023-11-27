@@ -4,7 +4,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Admin | Prices</title>
+    <title>Create | Ticket</title>
 
 
     <!-- Font Awesome -->
@@ -91,20 +91,15 @@
                                     </a>
                                 </li>
                                 <li class="nav-item">
-                                    <a href="userticket.php" class="nav-link active">
-                                        <i class="far fa-user nav-icon"></i>
-                                        <p> Agent Management</p>
-                                    </a>
-                                </li>
-                                <!-- <li class="nav-item">
-                                    <a href="adminprice.php" class="nav-link">
-                                        <i class="fas fa-money-bill nav-icon"></i>
-                                        <p>Price Management</p>
-                                    </a>
-                                </li> -->
+                                        <a href="userticket.php" class="nav-link active" >
+                                            <i class="far fa-user nav-icon"></i>
+                                            <p>Ticket Form</p>
+                                        </a>
+                                    </li>
+                                  
 
-                            </ul>
-                        </li>
+                                </ul>
+                            </li>
 
                         <li class="nav-item">
                             <a href="#" class="nav-link">
@@ -173,7 +168,7 @@
                 </div>
                 <!-- /.card-header -->
                 <!-- form start -->
-                <form>
+                <form action="../userprocess/ticketInsert.php" method="POST">
                     <div class="row">
                         <!-- First Column (col-md-6) -->
                         <div class="col-md-6">
@@ -225,61 +220,36 @@
 
                                     </div>
                                 </div>
+                                <fieldset>
+    <legend>Stay Type</legend>
+    <div class="form-group">
+        <div class="form-check form-check-inline">
+            <input class="form-check-input" type="radio" name="stayType" id="dayTourRadio" value="Daytour" onchange="updateTimeSchedule()" required>
+            <label class="form-check-label" for="dayTourRadio">Day Tour</label>
+        </div>
+        <div class="form-check form-check-inline">
+            <input class="form-check-input" type="radio" name="stayType" id="overnightRadio" value="Overnight" onchange="updateTimeSchedule()" required>
+            <label class="form-check-label" for="overnightRadio">Overnight</label>
+        </div>
+
+    </div>
                                 <div class="form-group">
-                                    <label for="exampleInputFile">Boat</label>
-                                    <div class="input-group">
-                                        <div class="form-check form-check-inline">
-                                            <input class="form-check-input" type="radio" name="stayType" id="dayTourRadio" value="Daytour" onchange="updateTimeSchedule()" required>
-                                            <label class="form-check-label" for="dayTourRadio">Day Tour</label>
-                                        </div>
-                                        <div class="form-check form-check-inline">
-                                            <input class="form-check-input" type="radio" name="stayType" id="overnightRadio" value="Overnight" onchange="updateTimeSchedule()" required>
-                                            <label class="form-check-label" for="overnightRadio">Overnight</label>
-                                        </div>
-
-                                    </div>
-                                </div>
-
-                                <div class="form-group">
-                                    <label for="exampleInputFile">Boat</label>
-                                    <div class="input-group">
-                                        <div class="custom-file">
-
-                                            <select class="form-control" id="boat" name="boat">
-                                                <option value="standard">Select a Boat</option>
-
-                                                <option value="Duran Duran">Duran Duran</option>
-                                                <option value="Franklyn">Franklyn</option>
-                                                <option value="Island Rose">Island Rose</option>
-                                                <option value="Lorwinds">Lorwinds</option>
-                                                <option value="San Pedro  de Nonok">San Pedro de Nonok</option>
-
-
-                                            </select>
-                                        </div>
-
-                                    </div>
-                                </div>
-                                <div class="form-group">
-                                    <label for="exampleInputFile">Boat</label>
-                                    <div class="input-group">
-                                        <div class="custom-file">
-
-                                            <select class="form-control" id="boat" name="boat">
-                                                <option value="standard">Select a Boat</option>
-
-                                                <option value="Duran Duran">Duran Duran</option>
-                                                <option value="Franklyn">Franklyn</option>
-                                                <option value="Island Rose">Island Rose</option>
-                                                <option value="Lorwinds">Lorwinds</option>
-                                                <option value="San Pedro  de Nonok">San Pedro de Nonok</option>
-
-
-                                            </select>
-                                        </div>
-
-                                    </div>
-                                </div>
+    <label for="cottageTypeDropdown">Cottage Type: </label>
+    <div class="dropdown">
+        <button class="btn btn-primary dropdown-toggle" type="button" id="cottageTypeButton" data-bs-toggle="dropdown" aria-expanded="false">
+            Select Cottage
+        </button>
+        <ul class="dropdown-menu" aria-labelledby="cottageTypeButton">
+            <li><a class="dropdown-item"  data-value="Two-Story w/ Attic">Two-Story w/ Attic</a></li>
+            <li><a class="dropdown-item"  data-value="Duplex Cottage(Right Side of the Island)">Duplex Cottage(Right Side of the Island)</a></li>
+            <li><a class="dropdown-item"  data-value="Duplex Cottage(Left Side of the Island)">Duplex Cottage(Left Side of the Island)</a></li>
+            <li><a class="dropdown-item"  data-value="Duplex Cottage(Left Side of the Island)">Tourism Building Room</a></li>
+        </ul>
+    </div>
+    <!-- Hidden input field to store the selected value -->
+    <input type="hidden" name="cottageType" id="cottageType" value="" />
+  
+</div>
                                 <div class="form-group">
                                     <label for="timeSchedule">Time Schedule</label>
                                     <select class="form-control" id="timeSchedule" name="timeSchedule">
@@ -344,7 +314,7 @@
 
             <!-- Common Footer for Both Columns -->
             <div class="card-footer">
-                <button type="submit" class="btn btn-primary">Submit</button>
+                <button type="submit" name="submit" class="btn btn-primary">Submit</button>
             </div>
             </form>
 
@@ -363,6 +333,10 @@
 
 
 
+<!-- jQuery -->
+<script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+<!-- Bootstrap JavaScript -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 
     <script src="../adminsidebar/activesidebar.js"></script>
     <!-- jQuery -->
@@ -398,6 +372,4 @@
 
     <!-- AdminLTE dashboard demo (This is only for demo purposes) -->
     <script src="../dist/js/pages/dashboard.js"></script>
-</body>
-
 </html>

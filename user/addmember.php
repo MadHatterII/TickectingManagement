@@ -1,10 +1,18 @@
+<?php
+
+
+include '../userprocess/memberInsert.php';
+insertMembers();
+
+
+?>
 <!DOCTYPE html>
 <html lang="en">
 
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Admin | Prices</title>
+    <title>Create | Ticket</title>
 
 
     <!-- Font Awesome -->
@@ -42,15 +50,14 @@
     <div class="wrapper">
 
         <!-- Preloader -->
-        <!-- <div class="preloader flex-column justify-content-center align-items-center">
-      <img class="animation__shake" src="../dist/img/AdminLTELogo.png" alt="AdminLTELogo" height="60" width="60">
-    </div> -->
+        <div class="preloader flex-column justify-content-center align-items-center">
+            <img class="animation__shake" src="../dist/img/AdminLTELogo.png" alt="AdminLTELogo" height="60" width="60">
+        </div>
 
         <?php include '../userside/nav.php'; ?>
 
         <!-- Main Sidebar Container -->
-  <!-- Main Sidebar Container -->
-  <aside class="main-sidebar sidebar-dark-primary elevation-4">
+        <aside class="main-sidebar sidebar-dark-primary elevation-4">
             <!-- Brand Logo -->
             <a href="adminhome.php" class="brand-link">
                 <img src="../img/slsulogo.png" alt="AdminLTE Logo" class="brand-image img-circle elevation-3" style="opacity: 1">
@@ -92,12 +99,12 @@
                                     </a>
                                 </li>
                                 <li class="nav-item">
-                                        <a href="userticket.php" class="nav-link" >
+                                        <a href="userticket.php" class="nav-link active" >
                                             <i class="far fa-user nav-icon"></i>
                                             <p>Ticket Form</p>
                                         </a>
                                     </li>
-                                    
+                                  
 
                                 </ul>
                             </li>
@@ -118,7 +125,7 @@
                                     </a>
                                 </li>
                                 <li class="nav-item">
-                                    <a href="usercottage.php" class="nav-link active">
+                                    <a href="usercottage.php" class="nav-link">
                                         <i class="far fa-circle nav-icon"></i>
                                         <p>Cottage</p>
                                     </a>
@@ -152,158 +159,103 @@
             </div>
             <!-- /.sidebar -->
         </aside>
+        <section id="memberList">
+    <div class="container">
+        <h3>Member List</h3>
+        <p>Add individual members.</p>
 
+        <!-- Button to trigger the modal -->
 
-
-        <!-- Sidebar -->
-
-
-        <!-- Content Wrapper. Contains page content -->
-        <div class="content-wrapper">
-            <!-- Content Header (Page header) -->
-            <div class="content-header">
-                <div class="container-fluid">
-                    <div class="row mb-2">
-                        <div class="col-sm-6">
-                            <h1 class="m-0">Dashboard</h1>
-                        </div><!-- /.col -->
-                        <div class="col-sm-6">
-                            <ol class="breadcrumb float-sm-right">
-                                <li class="breadcrumb-item"><a href="#">Home</a></li>
-                                <li class="breadcrumb-item active">Dashboard v1</li>
-                            </ol>
-                        </div><!-- /.col -->
-                    </div><!-- /.row -->
-                </div><!-- /.container-fluid -->
-            </div>
-            <!-- /.content-header -->
-
-            <!-- Main content -->
-            <section class="content">
-
-
-                <div class="container-fluid">
-                    <!-- Small boxes (Stat box) -->
-                    <div class="row">
-                        <!-- =========================================================== -->
-
-                        <?php
-                        // Dynamic counts obtained from the database (replace with actual counts)
-                        $dynamicCounts = [
-                            "Two-Story w/ Attic" => 3,
-                            "Duplex Cottage(Right Side of the Island)" => 2,
-                            "Duplex Cottage(Left Side of the Island)" => 4,
-                            "Tourism Building Room" => 1
-                        ];
-
-                        foreach ($dynamicCounts as $cottageType => $count) {
-                            $infoBoxClass = "";
-                            if ($count > 2) {
-                                $infoBoxClass = "bg-gradient-info";
-                            } elseif ($count > 1) {
-                                $infoBoxClass = "bg-gradient-success";
-                            } elseif ($count > 0) {
-                                $infoBoxClass = "bg-gradient-warning";
-                            } else {
-                                $infoBoxClass = "bg-gradient-danger";
-                            }
-                        ?>
-                            <div class="col-md-3 col-sm-6 col-12">
-                                <div class="info-box <?php echo $infoBoxClass; ?>">
-                                    <span class="info-box-icon"><i class="far fa-bookmark"></i></span>
-                                    <div class="info-box-content">
-                                        <span class="info-box-text"><?php echo $cottageType; ?></span>
-                                        <span class="info-box-number" id="availableCottages"><?php echo $count; ?></span>
-                                    </div>
-                                    <!-- /.info-box-content -->
+        <!-- Member Modal -->
+        <form method="POST" action="">
+      
+                            <h5 class="modal-title" id="addMemberModalLabel">Add Member</h5>
+                        
+                     
+                        <div class="modal-body">
+                            
+                                <div class="form-group">
+                                    <label for="memberCount">Number of Members</label>
+                                    <input type="number" name="memberCount" class="form-control" id="memberCount" placeholder="Enter the number of members" required>
                                 </div>
-                                <!-- /.info-box -->
-                            </div>
-                            <!-- /.col -->
-                            <div class="col-md-3 col-sm-6 col-12">
-                                <div class="info-box bg-gradient-success">
-                                    <span class="info-box-icon"><i class="far fa-thumbs-up"></i></span>
 
-                                    <div class="info-box-content">
-                                        <span class="info-box-text">Duplex Cottage(Right Side of the Island)</span>
-                                        <span class="info-box-number" id="availableCottages">41,410</span>
-
-
+                                <div class="form-group">
+                                    <label for="memberFields">Member Names</label>
+                                    <div id="memberFields">
+                                        <!-- Dynamically generated member input fields will appear here -->
                                     </div>
-                                    <!-- /.info-box-content -->
                                 </div>
-                                <!-- /.info-box -->
-                            </div>
-                            <!-- /.col -->
-                            <div class="col-md-3 col-sm-6 col-12">
-                                <div class="info-box bg-gradient-warning">
-                                    <span class="info-box-icon"><i class="far fa-calendar-alt"></i></span>
+                           
+                        </div>
+                        <div class="modal-footer">
+    <button type="button" class="btn btn-secondary">Close</button>
+    <button type="button" class="btn btn-primary" id="generateMembers">Generate Members</button>
+    <button type="submit" class="btn btn-success" id="submitMembers" name="submitMembers">Submit</button>
+</div>
+</form>
 
-                                    <div class="info-box-content">
-                                        <span class="info-box-text">Duplex Cottage(Left Side of the Island)</span>
-                                        <span class="info-box-number" id="availableCottages">41,410</span>
+    
 
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+    const memberFields = document.getElementById("memberFields");
+    const generateMembersButton = document.getElementById("generateMembers");
 
-                                    </div>
-                                    <!-- /.info-box-content -->
-                                </div>
-                                <!-- /.info-box -->
-                            </div>
-                            <!-- /.col -->
-                            <div class="col-md-3 col-sm-6 col-12">
-                                <div class="info-box bg-gradient-danger">
-                                    <span class="info-box-icon"><i class="fas fa-comments"></i></span>
+    generateMembersButton.addEventListener("click", function () {
+        const memberCountInput = document.getElementById("memberCount");
+        const count = parseInt(memberCountInput.value, 10); // Always specify the radix
 
-                                    <div class="info-box-content">
-                                        <span class="info-box-text">Tourism Building Room</span>
-                                        <span class="info-box-number" id="availableCottages">41</span>
+        // Clear existing member fields
+        memberFields.innerHTML = "";
 
+        for (let i = 0; i < count; i++) {
+            // Create a div for the input group
+            const inputGroup = document.createElement("div");
+            inputGroup.classList.add("form-group");
 
-                                    </div>
-                                    <!-- /.info-box-content -->
-                                </div>
-                                <!-- /.info-box -->
-                            </div>
-                            <!-- /.col -->
-                        <?php } ?>
-                    </div>
-                    <!-- /.row -->
-                </div>
-                <!-- /.row -->
-                <!-- Main row -->
-                <div class="row">
+            // Create the label for the input
+            const label = document.createElement("label");
+            label.setAttribute("for", "memberName" + i);
+            label.textContent = "Member " + (i + 1) + " Name";
 
-                    <!-- Left col -->
-                    <section class="col-lg-7 connectedSortable">
+            // Create the input field
+            const input = document.createElement("input");
+            input.type = "text";
+            input.classList.add("form-control");
+            input.name = "memberName[]";
+            input.id = "memberName" + i;
+            input.placeholder = "Enter member name";
+            input.required = true;
 
-                    </section>
+            // Append the label and input to the input group
+            inputGroup.appendChild(label);
+            inputGroup.appendChild(input);
 
-                    <!-- /.Left col -->
-                    <!-- right col (We are only adding the ID to make the widgets sortable)-->
-                    <section class="col-lg-5 connectedSortable">
-
-
-                    </section>
-
-                    <!-- right col -->
-                </div>
-                <!-- /.row (main row) -->
-        </div><!-- /.container-fluid -->
-        </section>
-        <!-- /.content -->
-    </div>
-
-
-    <!-- ./wrapper -->
+            // Append the input group to the fields container
+            memberFields.appendChild(inputGroup);
+        }
+    });
+});
+</script>
 
 
 
-    <?php include '../footer.php' ?>
+</div>
+<br><br><br><br><br><br><br><br><br><br>
+<br><br><br><br><br><br><br><br><br><br>
+<br>
+<?php include '../footer.php' ?>   
 
 
 
 
-
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+<!-- jQuery -->
+<script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+<!-- Bootstrap JavaScript -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 
     <script src="../adminsidebar/activesidebar.js"></script>
     <!-- jQuery -->
@@ -339,6 +291,4 @@
 
     <!-- AdminLTE dashboard demo (This is only for demo purposes) -->
     <script src="../dist/js/pages/dashboard.js"></script>
-</body>
-
 </html>
