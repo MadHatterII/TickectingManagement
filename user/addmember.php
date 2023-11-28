@@ -3,8 +3,67 @@
 
 include '../userprocess/memberInsert.php';
 insertMembers();
+include '../connection/connection.php';
+$sql = "SELECT * FROM members";
+
+// Execute the query and store the result in a variable
+$result = mysqli_query($conn, $sql);
+
+// Check if the query was successful
+if (!$result) {
+    die("Error: " . mysqli_error($conn));
+}
 
 
+$activeTouristCount = mysqli_num_rows($result);
+
+
+/// Total cottages
+$totalCottages = 20;
+
+// Query to get the count of booked cottages
+$sql1 = "SELECT COUNT(cottage_type) as bookedCottages FROM bookings WHERE status = 'IN'";
+$result1 = mysqli_query($conn, $sql1);
+$row1 = mysqli_fetch_assoc($result1);
+$bookedCottages = $row1['bookedCottages'];
+
+// Query to get the total number of cottages from the full_texts table
+$sql2 = "SELECT SUM(cottage_count) as totalCottageCount FROM cottages";
+$result2 = mysqli_query($conn, $sql2);
+$row2 = mysqli_fetch_assoc($result2);
+$totalCottageCount = $row2['totalCottageCount'];
+
+// Calculate available cottages
+$availableCottages = $totalCottages - $bookedCottages - $totalCottageCount;
+
+//boat count
+$sql2 = "SELECT * FROM boats";
+
+// Execute the query and store the result in a variable
+$result2 = mysqli_query($conn, $sql2);
+
+// Check if the query was successful
+if (!$result2) {
+    die("Error: " . mysqli_error($conn));
+}
+
+
+$activeBoatsCount = mysqli_num_rows($result2);
+
+
+//ticketing agent count
+$sql3 = "SELECT * FROM Useraccounts";
+
+// Execute the query and store the result in a variable
+$result3 = mysqli_query($conn, $sql3);
+
+// Check if the query was successful
+if (!$result3) {
+    die("Error: " . mysqli_error($conn));
+}
+
+// Count the active Ticketing Agents
+$activeTicketingAgentsCount = mysqli_num_rows($result3);
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -159,91 +218,204 @@ insertMembers();
             </div>
             <!-- /.sidebar -->
         </aside>
-        <section id="memberList">
-    <div class="container">
-        <h3>Member List</h3>
-        <p>Add individual members.</p>
+         <!-- Content Wrapper. Contains page content -->
+         <div class="content-wrapper">
+            <!-- Content Header (Page header) -->
+           
+            <!-- /.content-header -->
 
-        <!-- Button to trigger the modal -->
+            <!-- Main content -->
+            <section class="content">
 
-        <!-- Member Modal -->
-        <form method="POST" action="">
-      
-                            <h5 class="modal-title" id="addMemberModalLabel">Add Member</h5>
-                        
-                     
-                        <div class="modal-body">
-                            
-                                <div class="form-group">
-                                    <label for="memberCount">Number of Members</label>
-                                    <input type="number" name="memberCount" class="form-control" id="memberCount" placeholder="Enter the number of members" required>
-                                </div>
 
-                                <div class="form-group">
-                                    <label for="memberFields">Member Names</label>
-                                    <div id="memberFields">
-                                        <!-- Dynamically generated member input fields will appear here -->
+                <div class="container-fluid">
+                    <!-- Small boxes (Stat box) -->
+                    <div class="row">
+                            <div class="col-lg-3 col-6">
+                                <!-- small box -->
+                                <div class="small-box bg-info">
+                                    <div class="inner">
+                                        <h3><?php echo $activeTouristCount; ?></h3>
+                                        <p>Tourist</p>
                                     </div>
+                                    <div class="icon">
+                                        <i class="fas fa-user"></i>
+                                    </div>
+                                    <a href="#" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
                                 </div>
-                           
+
+                            </div>
+                            <!-- ./col -->
+                            <div class="col-lg-3 col-6">
+                                <!-- small box -->
+                                <div class="small-box bg-success">
+                                    <div class="inner">
+                                        <h3><?php echo $activeBoatsCount; ?></h3>
+                                        <p>Active Boat</p>
+                                    </div>
+                                    <div class="icon">
+                                        <i class="fas fa-ship"></i>
+                                    </div>
+                                    <a href="#" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
+                                </div>
+
+                            </div>
+                            <!-- ./col -->
+                            <div class="col-lg-3 col-6">
+                                <!-- small box -->
+                                <div class="small-box bg-warning">
+                                    <div class="inner">
+                                        <h3><?php echo $availableCottages; ?></h3>
+                                        <p>Available Cottage</p>
+                                    </div>
+                                    <div class="icon">
+                                        <i class="fas fa-home"></i>
+                                    </div>
+                                    <a href="#" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
+                                </div>
+
+                            </div>
+                            <!-- ./col -->
+                            <div class="col-lg-3 col-6">
+                                <!-- small box -->
+                                <div class="small-box bg-danger">
+                                    <div class="inner">
+                                        <h3><?php echo $activeTicketingAgentsCount; ?></h3>
+                                        <p>Ticketing Agent</p>
+                                    </div>
+                                    <div class="icon">
+                                        <i class="fas fa-user-secret"></i>
+                                    </div>
+                                    <a href="#" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
+                                </div>
+
+                            </div>
+                            <!-- ./col -->
                         </div>
-                        <div class="modal-footer">
-    <button type="button" class="btn btn-secondary">Close</button>
-    <button type="button" class="btn btn-primary" id="generateMembers">Generate Members</button>
-    <button type="submit" class="btn btn-success" id="submitMembers" name="submitMembers">Submit</button>
-</div>
-</form>
+                    <!-- /.row -->
+                    <!-- Main row -->
+                    <!-- <div class="row"> -->
+                    <!-- Left col -->
+                    <!-- <section class="col-lg-7 connectedSortable"> -->
+                    
 
-    
+                    <!-- </section> -->
 
-<script>
-document.addEventListener("DOMContentLoaded", function () {
-    const memberFields = document.getElementById("memberFields");
-    const generateMembersButton = document.getElementById("generateMembers");
+                    <!-- /.Left col -->
+                    <!-- right col (We are only adding the ID to make the widgets sortable)-->
+                    <!-- <section class="col-lg-5 connectedSortable"> -->
+                    <div class="card card-danger">
+                        <div class="card-header">
+                            <h3 class="card-title">Group Members</h3>
+                        </div>
+                        <!-- /.card-header -->
+                        <div class="card-body">
+                            <div class="container">
+                                <h3>Member List</h3>
+                                <p>Add individual members.</p>
 
-    generateMembersButton.addEventListener("click", function () {
-        const memberCountInput = document.getElementById("memberCount");
-        const count = parseInt(memberCountInput.value, 10); // Always specify the radix
+                                <!-- Button to trigger the modal -->
 
-        // Clear existing member fields
-        memberFields.innerHTML = "";
+                                <!-- Member Modal -->
+                                <form method="POST" action="">
 
-        for (let i = 0; i < count; i++) {
-            // Create a div for the input group
-            const inputGroup = document.createElement("div");
-            inputGroup.classList.add("form-group");
-
-            // Create the label for the input
-            const label = document.createElement("label");
-            label.setAttribute("for", "memberName" + i);
-            label.textContent = "Member " + (i + 1) + " Name";
-
-            // Create the input field
-            const input = document.createElement("input");
-            input.type = "text";
-            input.classList.add("form-control");
-            input.name = "memberName[]";
-            input.id = "memberName" + i;
-            input.placeholder = "Enter member name";
-            input.required = true;
-
-            // Append the label and input to the input group
-            inputGroup.appendChild(label);
-            inputGroup.appendChild(input);
-
-            // Append the input group to the fields container
-            memberFields.appendChild(inputGroup);
-        }
-    });
-});
-</script>
+                                    <h5 class="modal-title" id="addMemberModalLabel">Add Member</h5>
 
 
+                                    <div class="modal-body">
 
-</div>
-<br><br><br><br><br><br><br><br><br><br>
-<br><br><br><br><br><br><br><br><br><br>
-<br>
+                                        <div class="form-group">
+                                            <label for="memberCount">Number of Members</label>
+                                            <input type="number" name="memberCount" class="form-control" id="memberCount" placeholder="Enter the number of members" required>
+                                        </div>
+
+                                        <div class="form-group">
+                                            <label for="memberFields">Member Names</label>
+                                            <div id="memberFields">
+                                                <!-- Dynamically generated member input fields will appear here -->
+                                            </div>
+                                        </div>
+
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-secondary">Close</button>
+                                        <button type="button" class="btn btn-primary" id="generateMembers">Generate Members</button>
+                                        <button type="submit" class="btn btn-success" id="submitMembers" name="submitMembers">Submit</button>
+                                    </div>
+                                </form>
+
+
+
+                                <script>
+                                    document.addEventListener("DOMContentLoaded", function() {
+                                        const memberFields = document.getElementById("memberFields");
+                                        const generateMembersButton = document.getElementById("generateMembers");
+
+                                        generateMembersButton.addEventListener("click", function() {
+                                            const memberCountInput = document.getElementById("memberCount");
+                                            const count = parseInt(memberCountInput.value, 10); // Always specify the radix
+
+                                            // Clear existing member fields
+                                            memberFields.innerHTML = "";
+
+                                            for (let i = 0; i < count; i++) {
+                                                // Create a div for the input group
+                                                const inputGroup = document.createElement("div");
+                                                inputGroup.classList.add("form-group");
+
+                                                // Create the label for the input
+                                                const label = document.createElement("label");
+                                                label.setAttribute("for", "memberName" + i);
+                                                label.textContent = "Member " + (i + 1) + " Name";
+
+                                                // Create the input field
+                                                const input = document.createElement("input");
+                                                input.type = "text";
+                                                input.classList.add("form-control");
+                                                input.name = "memberName[]";
+                                                input.id = "memberName" + i;
+                                                input.placeholder = "Enter member name";
+                                                input.required = true;
+
+                                                // Append the label and input to the input group
+                                                inputGroup.appendChild(label);
+                                                inputGroup.appendChild(input);
+
+                                                // Append the input group to the fields container
+                                                memberFields.appendChild(inputGroup);
+                                            }
+                                        });
+                                    });
+                                </script>
+
+
+
+                            </div>
+                        </div>
+                        <!-- /.card-body -->
+                    </div>
+
+
+
+                    <!-- </section> -->
+                    <!-- right col -->
+                    <hr>
+                    <div class="row mt-3">
+                        <div class="col-12 text-center">
+                            <button type="button" class="btn btn-primary" onclick="submitForms()">Submit</button>
+                        </div>
+                    </div>
+                    <hr>
+
+                    <!-- </div> -->
+
+
+
+                    <!-- /.row (main row) -->
+                </div><!-- /.container-fluid -->
+            </section>
+            <!-- /.content -->
+        </div>
 <?php include '../footer.php' ?>   
 
 
