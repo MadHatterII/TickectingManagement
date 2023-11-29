@@ -52,6 +52,12 @@
                                             <p>Price Management</p>
                                         </a>
                                     </li>
+                                    <li class="nav-item">
+                                        <a href="customerside.php" class="nav-link" >
+                                            <i class="fas fa-money-bill nav-icon"></i>
+                                            <p>customerside</p>
+                                        </a>
+                                    </li>
 
                                 </ul>
                             </li>

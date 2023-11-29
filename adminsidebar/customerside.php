@@ -41,6 +41,15 @@
                                         </a>
                                     </li>
                                     <li class="nav-item">
+                                        <a href="customerside.php" class="nav-link" >
+                                            <i class="fas fa-money-bill nav-icon"></i>
+                                            <p>customerside</p>
+                                        </a>
+                                    </li>
+
+                                </ul>
+                            </li>
+                                    <li class="nav-item">
                                         <a href="adminticket.php" class="nav-link active" >
                                             <i class="far fa-user nav-icon"></i>
                                             <p> Agent Management</p>
@@ -52,16 +61,9 @@
                                             <p>Price Management</p>
                                         </a>
                                     </li>
-                                    <li class="nav-item">
-                                        <a href="customerside.php" class="nav-link" >
-                                            <i class="fas fa-money-bill nav-icon"></i>
-                                            <p>customerside</p>
-                                        </a>
-                                    </li>
 
                                 </ul>
                             </li>
-
                             <li class="nav-item">
                                 <a href="#" class="nav-link">
                                     <i class="far fa-check-circle nav-icon"></i>
