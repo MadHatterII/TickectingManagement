@@ -41,7 +41,7 @@
                                         </a>
                                     </li>
                                     <li class="nav-item">
-                                        <a href="customerside.php" class="nav-link" >
+                                        <a href="customerside.php" class="nav-link active" >
                                             <i class="fas fa-money-bill nav-icon"></i>
                                             <p>customerside</p>
                                         </a>
@@ -50,7 +50,7 @@
                                 </ul>
                             </li>
                                     <li class="nav-item">
-                                        <a href="adminticket.php" class="nav-link active" >
+                                        <a href="adminticket.php" class="nav-link " >
                                             <i class="far fa-user nav-icon"></i>
                                             <p> Agent Management</p>
                                         </a>
