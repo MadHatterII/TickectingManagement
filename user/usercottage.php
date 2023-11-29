@@ -1,3 +1,35 @@
+<?php
+// Fetch data from the database
+include '../connection/connection.php';
+
+// Check connection
+if ($conn->connect_error) {
+    die("Connection failed: " . $conn->connect_error);
+}
+
+// Fetch data from the database
+$sql = "SELECT cottage_type, COUNT(*) as count FROM cottages GROUP BY cottage_type";
+$result = $conn->query($sql);
+
+// Check if the query was successful
+if (!$result) {
+    die("Error: " . $conn->error);
+}
+
+// Create an associative array to store the counts
+$dynamicCounts = [];
+
+// Populate the array with data from the database
+while ($row = $result->fetch_assoc()) {
+    $cottageType = $row['cottage_type'];
+    $count = $row['count'];
+    $dynamicCounts[$cottageType] = $count;
+}
+
+// Close the database connection
+$conn->close();
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -5,7 +37,6 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Admin | Prices</title>
-
 
     <!-- Font Awesome -->
     <link rel="stylesheet" href="../plugins/fontawesome-free/css/all.min.css">
@@ -49,13 +80,12 @@
         <?php include '../userside/nav.php'; ?>
 
         <!-- Main Sidebar Container -->
-  <!-- Main Sidebar Container -->
-  <aside class="main-sidebar sidebar-dark-primary elevation-4">
+        <aside class="main-sidebar sidebar-dark-primary elevation-4">
             <!-- Brand Logo -->
             <a href="adminhome.php" class="brand-link">
                 <img src="../img/slsulogo.png" alt="AdminLTE Logo" class="brand-image img-circle elevation-3" style="opacity: 1">
                 <span class="brand-text font-weight-light">WanderLust</span>
-            </a>
+            </a>    
 
             <!-- Sidebar -->
             <div class="sidebar">
@@ -68,8 +98,6 @@
                         <a href="#" class="d-block">Alexander Pierce</a>
                     </div>
                 </div>
-
-
 
                 <!-- Sidebar Menu -->
                 <nav class="mt-2">
@@ -92,15 +120,13 @@
                                     </a>
                                 </li>
                                 <li class="nav-item">
-                                        <a href="userticket.php" class="nav-link" >
-                                            <i class="far fa-user nav-icon"></i>
-                                            <p>Ticket Form</p>
-                                        </a>
-                                    </li>
-                                    
-
-                                </ul>
-                            </li>
+                                    <a href="userticket.php" class="nav-link" >
+                                        <i class="far fa-user nav-icon"></i>
+                                        <p>Ticket Form</p>
+                                    </a>
+                                </li>
+                            </ul>
+                        </li>
 
                         <li class="nav-item">
                             <a href="#" class="nav-link">
@@ -127,8 +153,6 @@
                         </li>
                         <li class="nav-header">MISCELLANEOUS</li>
 
-
-
                         <li class="nav-item">
                             <a href="#" class="nav-link">
                                 <i class="nav-icon fas fa-chart-line text-info"></i>
@@ -136,27 +160,18 @@
                             </a>
                         </li>
 
-
-
                         <li class="nav-item">
                             <a href="/logout" class="nav-link">
                                 <i class="nav-icon far fa-circle text-danger"></i>
                                 <p>Logout</p>
                             </a>
                         </li>
-
-
                     </ul>
                 </nav>
                 <!-- /.sidebar-menu -->
             </div>
             <!-- /.sidebar -->
         </aside>
-
-
-
-        <!-- Sidebar -->
-
 
         <!-- Content Wrapper. Contains page content -->
         <div class="content-wrapper">
@@ -180,165 +195,83 @@
 
             <!-- Main content -->
             <section class="content">
-
-
                 <div class="container-fluid">
                     <!-- Small boxes (Stat box) -->
                     <div class="row">
-                        <!-- =========================================================== -->
+                    <?php
+// Loop through the dynamic counts and generate the info boxes
+foreach ($dynamicCounts as $cottageType => $count) {
+    // Initialize the class for each iteration
+    $infoBoxClass = "";
 
-                        <?php
-                        // Dynamic counts obtained from the database (replace with actual counts)
-                        $dynamicCounts = [
-                            "Two-Story w/ Attic" => 3,
-                            "Duplex Cottage(Right Side of the Island)" => 2,
-                            "Duplex Cottage(Left Side of the Island)" => 4,
-                            "Tourism Building Room" => 1
-                        ];
+    // Determine the class based on count
+    if ($count > 2) {
+        $infoBoxClass = "bg-gradient-info";
+    } elseif ($count > 1) {
+        $infoBoxClass = "bg-gradient-success";
+    } elseif ($count > 0) {
+        $infoBoxClass = "bg-gradient-warning";
+    } else {
+        $infoBoxClass = "bg-gradient-danger";
+    }
+?>
+    <div class="col-md-3 col-sm-6 col-12">
+        <div class="info-box <?= $infoBoxClass; ?>">
+            <span class="info-box-icon"><i class="far fa-bookmark"></i></span>
+            <div class="info-box-content">
+                <span class="info-box-text"><?= $cottageType; ?></span>
+                <span class="info-box-number"><?= $count; ?> Cottages</span>
+            </div>
+            <!-- /.info-box-content -->
+        </div>
+        <!-- /.info-box -->
+    </div>
+<?php } ?>
 
-                        foreach ($dynamicCounts as $cottageType => $count) {
-                            $infoBoxClass = "";
-                            if ($count > 2) {
-                                $infoBoxClass = "bg-gradient-info";
-                            } elseif ($count > 1) {
-                                $infoBoxClass = "bg-gradient-success";
-                            } elseif ($count > 0) {
-                                $infoBoxClass = "bg-gradient-warning";
-                            } else {
-                                $infoBoxClass = "bg-gradient-danger";
-                            }
-                        ?>
-                            <div class="col-md-3 col-sm-6 col-12">
-                                <div class="info-box <?php echo $infoBoxClass; ?>">
-                                    <span class="info-box-icon"><i class="far fa-bookmark"></i></span>
-                                    <div class="info-box-content">
-                                        <span class="info-box-text"><?php echo $cottageType; ?></span>
-                                        <span class="info-box-number" id="availableCottages"><?php echo $count; ?></span>
-                                    </div>
-                                    <!-- /.info-box-content -->
-                                </div>
-                                <!-- /.info-box -->
-                            </div>
-                            <!-- /.col -->
-                            <div class="col-md-3 col-sm-6 col-12">
-                                <div class="info-box bg-gradient-success">
-                                    <span class="info-box-icon"><i class="far fa-thumbs-up"></i></span>
-
-                                    <div class="info-box-content">
-                                        <span class="info-box-text">Duplex Cottage(Right Side of the Island)</span>
-                                        <span class="info-box-number" id="availableCottages">41,410</span>
-
-
-                                    </div>
-                                    <!-- /.info-box-content -->
-                                </div>
-                                <!-- /.info-box -->
-                            </div>
-                            <!-- /.col -->
-                            <div class="col-md-3 col-sm-6 col-12">
-                                <div class="info-box bg-gradient-warning">
-                                    <span class="info-box-icon"><i class="far fa-calendar-alt"></i></span>
-
-                                    <div class="info-box-content">
-                                        <span class="info-box-text">Duplex Cottage(Left Side of the Island)</span>
-                                        <span class="info-box-number" id="availableCottages">41,410</span>
-
-
-                                    </div>
-                                    <!-- /.info-box-content -->
-                                </div>
-                                <!-- /.info-box -->
-                            </div>
-                            <!-- /.col -->
-                            <div class="col-md-3 col-sm-6 col-12">
-                                <div class="info-box bg-gradient-danger">
-                                    <span class="info-box-icon"><i class="fas fa-comments"></i></span>
-
-                                    <div class="info-box-content">
-                                        <span class="info-box-text">Tourism Building Room</span>
-                                        <span class="info-box-number" id="availableCottages">41</span>
-
-
-                                    </div>
-                                    <!-- /.info-box-content -->
-                                </div>
-                                <!-- /.info-box -->
-                            </div>
-                            <!-- /.col -->
-                        <?php } ?>
                     </div>
                     <!-- /.row -->
                 </div>
-                <!-- /.row -->
-                <!-- Main row -->
-                <div class="row">
+                <!-- /.container-fluid -->
+            </section>
+            <!-- /.content -->
+        </div>
+        <!-- /.wrapper -->
 
-                    <!-- Left col -->
-                    <section class="col-lg-7 connectedSortable">
+        <?php include '../footer.php' ?>
 
-                    </section>
+        <script src="../adminsidebar/activesidebar.js"></script>
+        <!-- jQuery -->
+        <script src="../plugins/jquery/jquery.min.js"></script>
+        <!-- jQuery UI 1.11.4 -->
+        <script src="../plugins/jquery-ui/jquery-ui.min.js"></script>
+        <!-- Resolve conflict in jQuery UI tooltip with Bootstrap tooltip -->
+        <script>
+            $.widget.bridge('uibutton', $.ui.button)
+        </script>
+        <!-- Bootstrap 4 -->
+        <script src="../plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
+        <!-- ChartJS -->
+        <script src="../plugins/chart.js/Chart.min.js"></script>
+        <!-- Sparkline -->
+        <script src="../plugins/sparklines/sparkline.js"></script>
+        <!-- JQVMap -->
+        <script src="../plugins/jqvmap/jquery.vmap.min.js"></script>
+        <script src="../plugins/jqvmap/maps/jquery.vmap.usa.js"></script>
+        <!-- jQuery Knob Chart -->
+        <script src="../plugins/jquery-knob/jquery.knob.min.js"></script>
+        <!-- daterangepicker -->
+        <script src="../plugins/moment/moment.min.js"></script>
+        <script src="../plugins/daterangepicker/daterangepicker.js"></script>
+        <!-- Tempusdominus Bootstrap 4 -->
+        <script src="../plugins/tempusdominus-bootstrap-4/js/tempusdominus-bootstrap-4.min.js"></script>
+        <!-- Summernote -->
+        <script src="../plugins/summernote/summernote-bs4.min.js"></script>
+        <!-- overlayScrollbars -->
+        <script src="../plugins/overlayScrollbars/js/jquery.overlayScrollbars.min.js"></script>
+        <!-- AdminLTE App -->
+        <script src="../dist/js/adminlte.js"></script>
 
-                    <!-- /.Left col -->
-                    <!-- right col (We are only adding the ID to make the widgets sortable)-->
-                    <section class="col-lg-5 connectedSortable">
-
-
-                    </section>
-
-                    <!-- right col -->
-                </div>
-                <!-- /.row (main row) -->
-        </div><!-- /.container-fluid -->
-        </section>
-        <!-- /.content -->
-    </div>
-
-
-    <!-- ./wrapper -->
-
-
-
-    <?php include '../footer.php' ?>
-
-
-
-
-
-
-    <script src="../adminsidebar/activesidebar.js"></script>
-    <!-- jQuery -->
-    <script src="../plugins/jquery/jquery.min.js"></script>
-    <!-- jQuery UI 1.11.4 -->
-    <script src="../plugins/jquery-ui/jquery-ui.min.js"></script>
-    <!-- Resolve conflict in jQuery UI tooltip with Bootstrap tooltip -->
-    <script>
-        $.widget.bridge('uibutton', $.ui.button)
-    </script>
-    <!-- Bootstrap 4 -->
-    <script src="../plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
-    <!-- ChartJS -->
-    <script src="../plugins/chart.js/Chart.min.js"></script>
-    <!-- Sparkline -->
-    <script src="../plugins/sparklines/sparkline.js"></script>
-    <!-- JQVMap -->
-    <script src="../plugins/jqvmap/jquery.vmap.min.js"></script>
-    <script src="../plugins/jqvmap/maps/jquery.vmap.usa.js"></script>
-    <!-- jQuery Knob Chart -->
-    <script src="../plugins/jquery-knob/jquery.knob.min.js"></script>
-    <!-- daterangepicker -->
-    <script src="../plugins/moment/moment.min.js"></script>
-    <script src="../plugins/daterangepicker/daterangepicker.js"></script>
-    <!-- Tempusdominus Bootstrap 4 -->
-    <script src="../plugins/tempusdominus-bootstrap-4/js/tempusdominus-bootstrap-4.min.js"></script>
-    <!-- Summernote -->
-    <script src="../plugins/summernote/summernote-bs4.min.js"></script>
-    <!-- overlayScrollbars -->
-    <script src="../plugins/overlayScrollbars/js/jquery.overlayScrollbars.min.js"></script>
-    <!-- AdminLTE App -->
-    <script src="../dist/js/adminlte.js"></script>
-
-    <!-- AdminLTE dashboard demo (This is only for demo purposes) -->
-    <script src="../dist/js/pages/dashboard.js"></script>
-</body>
-
+        <!-- AdminLTE dashboard demo (This is only for demo purposes) -->
+        <script src="../dist/js/pages/dashboard.js"></script>
+    </body>
 </html>
