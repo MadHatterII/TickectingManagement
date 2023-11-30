@@ -41,7 +41,16 @@
                                         </a>
                                     </li>
                                     <li class="nav-item">
-                                        <a href="adminticket.php" class="nav-link active" >
+                                        <a href="customerside.php" class="nav-link active" >
+                                            <i class="fas fa-money-bill nav-icon"></i>
+                                            <p>customerside</p>
+                                        </a>
+                                    </li>
+
+                                </ul>
+                            </li>
+                                    <li class="nav-item">
+                                        <a href="adminticket.php" class="nav-link " >
                                             <i class="far fa-user nav-icon"></i>
                                             <p> Agent Management</p>
                                         </a>
@@ -52,16 +61,9 @@
                                             <p>Price Management</p>
                                         </a>
                                     </li>
-                                    <li class="nav-item">
-                                        <a href="customerside.php" class="nav-link" >
-                                            <i class="fas fa-money-bill nav-icon"></i>
-                                            <p>customerside</p>
-                                        </a>
-                                    </li>
 
                                 </ul>
                             </li>
-
                             <li class="nav-item">
                                 <a href="#" class="nav-link">
                                     <i class="far fa-check-circle nav-icon"></i>
@@ -78,7 +80,7 @@
                                         </a>
                                     </li>
                                     <li class="nav-item">
-                                        <a href="admincottage.php" class="nav-link">
+                                        <a href="pages/search/enhanced.html" class="nav-link">
                                             <i class="far fa-circle nav-icon"></i>
                                             <p>Cottage</p>
                                         </a>
