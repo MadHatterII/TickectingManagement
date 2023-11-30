@@ -55,7 +55,7 @@ function insertMembers(){
 
         echo "<script>
         alert('Ticket completed successfully!');
-        window.location.href = 'addmember.php'; 
+        window.location.href = 'ticket.php'; 
       </script>";
     } catch (Exception $e) {
         // If an exception was thrown, roll back the transaction
