@@ -109,9 +109,9 @@ $activeTicketingAgentsCount = mysqli_num_rows($result3);
     <div class="wrapper">
 
         <!-- Preloader -->
-        <div class="preloader flex-column justify-content-center align-items-center">
+        <!-- <div class="preloader flex-column justify-content-center align-items-center">
             <img class="animation__shake" src="../dist/img/AdminLTELogo.png" alt="AdminLTELogo" height="60" width="60">
-        </div>
+        </div> -->
 
         <?php include '../userside/nav.php'; ?>
 
@@ -390,33 +390,49 @@ $activeTicketingAgentsCount = mysqli_num_rows($result3);
                                     </div>
                                 </div>
                                 <div class="row">
-                                    <?php
-                                    // Assuming you already have a database connection established
-                                    include '../connection/connection.php';;
-                                    // Fetch cottage type counts from the database
-                                    $sql = "SELECT cottage_type, cottage_count FROM cottages";
-                                    $result = $conn->query($sql);
 
-                                    // Generate the select options based on the database data
-                                    $options = "";
-                                    while ($row = $result->fetch_assoc()) {
-                                        if ($row['cottage_count'] > 0) {
-                                            $options .= "<option value='" . $row['cottage_type'] . "'>" . $row['cottage_type'] . "</option>";
-                                        }
-                                    }
-                                    ?>
 
                                     <!-- HTML part with the dynamically generated options -->
-                                    <div class="col-sm-6">
-                                        <!-- Cottage Selection -->
-                                        <div class="form-group">
-                                            <label>Cottage Selection (optional)</label>
-                                            <select class="form-control" id="cottageSelection" name="cottageType">
-                                                <?php echo $options; ?>
-                                            </select>
-                                            <small class="text-muted">Note: Cottage availability depends on the specific type, as there are 5 cottages available for each type.</small>
-                                        </div>
-                                    </div>
+                                    <?php
+// Assuming you have a database connection established
+include '../connection/connection.php';
+
+// Fetch cottage types with greater than 0 cottage count
+$query = "SELECT cottage_type FROM cottages WHERE cottage_count > 0";
+$result = mysqli_query($conn, $query);
+
+// Check for errors
+if (!$result) {
+    die("Query failed: " . mysqli_error($conn));
+}
+
+// Check if there are rows returned
+if (mysqli_num_rows($result) > 0) {
+    echo '<div class="col-sm-6">
+            <!-- Cottage Selection -->
+            <div class="form-group">
+                <label>Cottage Selection (optional)</label>
+                <select class="form-control" id="cottageSelection" name="cottageType">';
+
+    while ($row = mysqli_fetch_assoc($result)) {
+        echo '<option value="' . $row['cottage_type'] . '">' . $row['cottage_type'] . '</option>';
+    }
+
+    echo '</select>
+            <small class="text-muted">Note: Cottage availability depends on the specific type, as there are 5 cottages available for each type.</small>
+        </div>
+    </div>';
+} else {
+    echo '<div class="col-sm-6">
+            <p>No cottage types with greater than 0 cottage count found.</p>
+        </div>';
+}
+
+// Close the database connection
+mysqli_close($conn);
+?>
+
+
 
 
                                     <div class="col-sm-6">

@@ -4,6 +4,8 @@
 include '../userprocess/memberInsert.php';
 insertMembers();
 include '../connection/connection.php';
+//tourist count
+
 $sql = "SELECT * FROM members";
 
 // Execute the query and store the result in a variable
@@ -18,23 +20,23 @@ if (!$result) {
 $activeTouristCount = mysqli_num_rows($result);
 
 
-/// Total cottages
+// Total cottages
 $totalCottages = 20;
 
 // Query to get the count of booked cottages
 $sql1 = "SELECT COUNT(cottage_type) as bookedCottages FROM bookings WHERE status = 'IN'";
 $result1 = mysqli_query($conn, $sql1);
-$row1 = mysqli_fetch_assoc($result1);
-$bookedCottages = $row1['bookedCottages'];
+$row = mysqli_fetch_assoc($result1);
+$bookedCottages = $row['bookedCottages'];
 
-// Query to get the total number of cottages from the full_texts table
+// Query to get the remaining cottages
 $sql2 = "SELECT SUM(cottage_count) as totalCottageCount FROM cottages";
 $result2 = mysqli_query($conn, $sql2);
 $row2 = mysqli_fetch_assoc($result2);
-$totalCottageCount = $row2['totalCottageCount'];
+$totalCottageCount = $row2['totalCottageCount'];;
 
 // Calculate available cottages
-$availableCottages = $totalCottages - $bookedCottages - $totalCottageCount;
+$availableCottages = $totalCottages - $bookedCottages;
 
 //boat count
 $sql2 = "SELECT * FROM boats";
@@ -230,68 +232,69 @@ $activeTicketingAgentsCount = mysqli_num_rows($result3);
 
                 <div class="container-fluid">
                     <!-- Small boxes (Stat box) -->
-                    <div class="row">
-                            <div class="col-lg-3 col-6">
-                                <!-- small box -->
-                                <div class="small-box bg-info">
-                                    <div class="inner">
-                                        <h3><?php echo $activeTouristCount; ?></h3>
-                                        <p>Tourist</p>
-                                    </div>
-                                    <div class="icon">
-                                        <i class="fas fa-user"></i>
-                                    </div>
-                                    <a href="#" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
+                   <div class="row">
+                        <div class="col-lg-3 col-6">
+                            <!-- small box -->
+                            <div class="small-box bg-info">
+                                <div class="inner">
+                                    <h3><?php echo $activeTouristCount; ?></h3>
+                                    <p>Tourist</p>
                                 </div>
-
-                            </div>
-                            <!-- ./col -->
-                            <div class="col-lg-3 col-6">
-                                <!-- small box -->
-                                <div class="small-box bg-success">
-                                    <div class="inner">
-                                        <h3><?php echo $activeBoatsCount; ?></h3>
-                                        <p>Active Boat</p>
-                                    </div>
-                                    <div class="icon">
-                                        <i class="fas fa-ship"></i>
-                                    </div>
-                                    <a href="#" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
+                                <div class="icon">
+                                    <i class="fas fa-user"></i>
                                 </div>
-
+                                <a href="#" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
                             </div>
-                            <!-- ./col -->
-                            <div class="col-lg-3 col-6">
-                                <!-- small box -->
-                                <div class="small-box bg-warning">
-                                    <div class="inner">
-                                        <h3><?php echo $availableCottages; ?></h3>
-                                        <p>Available Cottage</p>
-                                    </div>
-                                    <div class="icon">
-                                        <i class="fas fa-home"></i>
-                                    </div>
-                                    <a href="#" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
-                                </div>
 
-                            </div>
-                            <!-- ./col -->
-                            <div class="col-lg-3 col-6">
-                                <!-- small box -->
-                                <div class="small-box bg-danger">
-                                    <div class="inner">
-                                        <h3><?php echo $activeTicketingAgentsCount; ?></h3>
-                                        <p>Ticketing Agent</p>
-                                    </div>
-                                    <div class="icon">
-                                        <i class="fas fa-user-secret"></i>
-                                    </div>
-                                    <a href="#" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
-                                </div>
-
-                            </div>
-                            <!-- ./col -->
                         </div>
+                        <!-- ./col -->
+                        <div class="col-lg-3 col-6">
+                            <!-- small box -->
+                            <div class="small-box bg-success">
+                                <div class="inner">
+                                    <h3><?php echo $activeBoatsCount; ?></h3>
+                                    <p>Active Boat</p>
+                                </div>
+                                <div class="icon">
+                                    <i class="fas fa-ship"></i>
+                                </div>
+                                <a href="#" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
+                            </div>
+
+                        </div>
+                        <!-- ./col -->
+                        <div class="col-lg-3 col-6">
+                            <!-- small box -->
+                            <div class="small-box bg-warning">
+                                <div class="inner">
+                                    <h3><?php echo $availableCottages; ?></h3>
+                                    <p>Available Cottage</p>
+                                </div>
+                                <div class="icon">
+                                    <i class="fas fa-home"></i>
+                                </div>
+                                <a href="#" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
+                            </div>
+
+                        </div>
+                        <!-- ./col -->
+                        <div class="col-lg-3 col-6">
+                            <!-- small box -->
+                            <div class="small-box bg-danger">
+                                <div class="inner">
+                                    <h3><?php echo $activeTicketingAgentsCount; ?></h3>
+                                    <p>Ticketing Agent</p>
+                                </div>
+                                <div class="icon">
+                                    <i class="fas fa-user-secret"></i>
+                                </div>
+                                <a href="#" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
+                            </div>
+
+                        </div>
+                        <!-- ./col -->
+                    </div>
+                    <!-- /.row -->
                     <!-- /.row -->
                     <!-- Main row -->
                     <!-- <div class="row"> -->
@@ -400,12 +403,7 @@ $activeTicketingAgentsCount = mysqli_num_rows($result3);
                     <!-- </section> -->
                     <!-- right col -->
                     <hr>
-                    <div class="row mt-3">
-                        <div class="col-12 text-center">
-                            <button type="button" class="btn btn-primary" onclick="submitForms()">Submit</button>
-                        </div>
-                    </div>
-                    <hr>
+                   
 
                     <!-- </div> -->
 
