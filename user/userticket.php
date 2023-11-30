@@ -205,7 +205,7 @@ $activeTicketingAgentsCount = mysqli_num_rows($result3);
 
 
                         <li class="nav-item">
-                            <a href="/logout" class="nav-link">
+                            <a href="../logout.php" class="nav-link">
                                 <i class="nav-icon far fa-circle text-danger"></i>
                                 <p>Logout</p>
                             </a>
@@ -390,34 +390,36 @@ $activeTicketingAgentsCount = mysqli_num_rows($result3);
                                     </div>
                                 </div>
                                 <div class="row">
-                                    <?php
-                                    // Assuming you already have a database connection established
-                                    include '../connection/connection.php';;
-                                    // Fetch cottage type counts from the database
-                                    $sql = "SELECT cottage_type, cottage_count FROM cottages";
-                                    $result = $conn->query($sql);
+                                <?php
+                                // Assuming you already have a database connection established
+                                include '../connection/connection.php';
 
-                                    // Generate the select options based on the database data
-                                    $options = "";
-                                    while ($row = $result->fetch_assoc()) {
-                                        if ($row['cottage_count'] > 0) {
-                                            $options .= "<option value='" . $row['cottage_type'] . "'>" . $row['cottage_type'] . "</option>";
-                                        }
-                                    }
-                                    ?>
+                                // Fetch cottage type counts from the database
+                                 $sql = "SELECT cottage_type, cottage_count FROM cottages";
+                                $result = $conn->query($sql);
 
-                                    <!-- HTML part with the dynamically generated options -->
-                                    <div class="col-sm-6">
-                                        <!-- Cottage Selection -->
-                                        <div class="form-group">
-                                            <label>Cottage Selection (optional)</label>
-                                            <select class="form-control" id="cottageSelection" name="cottageType">
-                                                <?php echo $options; ?>
-                                            </select>
-                                            <small class="text-muted">Note: Cottage availability depends on the specific type, as there are 5 cottages available for each type.</small>
-                                        </div>
-                                    </div>
+                                // Generate the select options based on the database data
+                                $options = "";
+                                while ($row = $result->fetch_assoc()) {
+                              // Check if there are available cottages for the current type
+                                if ($row['cottage_count'] > 0) {
+                                $options .= "<option value='" . $row['cottage_type'] . "'>" . $row['cottage_type'] . "</option>";
+    }
+}
+?>
 
+<!-- HTML part with the dynamically generated options -->
+<div class="col-sm-6">
+    <!-- Cottage Selection -->
+    <div class="form-group">
+        <div><?php echo $options ?></div>
+        <label>Cottage Selection (optional)</label>
+        <select class="form-control" id="cottageSelection" name="cottageType">
+            <?php echo $options; ?>
+        </select>
+        <small class="text-muted">Note: Cottage availability depends on the specific type, as there are 5 cottages available for each type.</small>
+    </div>
+</div>
 
                                     <div class="col-sm-6">
                                         <!-- Time to be Checkout -->
