@@ -1,4 +1,5 @@
 <?php
+<<<<<<< HEAD
 // PHP code
 include('../connection/connection.php');
 
@@ -82,6 +83,39 @@ if (isset($counts[$cottageType])) {
 
 
 
+=======
+// Fetch data from the database
+include '../connection/connection.php';
+
+// Check connection
+if ($conn->connect_error) {
+    die("Connection failed: " . $conn->connect_error);
+}
+
+// Fetch data from the database
+$sql = "SELECT cottage_type, COUNT(*) as count FROM cottages GROUP BY cottage_type";
+$result = $conn->query($sql);
+
+// Check if the query was successful
+if (!$result) {
+    die("Error: " . $conn->error);
+}
+
+// Create an associative array to store the counts
+$dynamicCounts = [];
+
+// Populate the array with data from the database
+while ($row = $result->fetch_assoc()) {
+    $cottageType = $row['cottage_type'];
+    $count = $row['count'];
+    $dynamicCounts[$cottageType] = $count;
+}
+
+// Close the database connection
+$conn->close();
+?>
+
+>>>>>>> 5c9f14cd12b467138a3230c0600b64d8d770be51
 <!DOCTYPE html>
 <html lang="en">
 
@@ -89,7 +123,6 @@ if (isset($counts[$cottageType])) {
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Admin | Prices</title>
-
 
     <!-- Font Awesome -->
     <link rel="stylesheet" href="../plugins/fontawesome-free/css/all.min.css">
@@ -143,7 +176,7 @@ if (isset($counts[$cottageType])) {
             <a href="adminhome.php" class="brand-link">
                 <img src="../img/slsulogo.png" alt="AdminLTE Logo" class="brand-image img-circle elevation-3" style="opacity: 1">
                 <span class="brand-text font-weight-light">WanderLust</span>
-            </a>
+            </a>    
 
             <!-- Sidebar -->
             <div class="sidebar">
@@ -156,8 +189,6 @@ if (isset($counts[$cottageType])) {
                         <a href="#" class="d-block">Alexander Pierce</a>
                     </div>
                 </div>
-
-
 
                 <!-- Sidebar Menu -->
                 <nav class="mt-2">
@@ -180,6 +211,7 @@ if (isset($counts[$cottageType])) {
                                     </a>
                                 </li>
                                 <li class="nav-item">
+<<<<<<< HEAD
                                     <a href="userticket.php" class="nav-link">
                                         <i class="far fa-user nav-icon"></i>
                                         <p> Agent Management</p>
@@ -192,6 +224,13 @@ if (isset($counts[$cottageType])) {
                                     </a>
                                 </li> -->
 
+=======
+                                    <a href="userticket.php" class="nav-link" >
+                                        <i class="far fa-user nav-icon"></i>
+                                        <p>Ticket Form</p>
+                                    </a>
+                                </li>
+>>>>>>> 5c9f14cd12b467138a3230c0600b64d8d770be51
                             </ul>
                         </li>
 
@@ -218,8 +257,12 @@ if (isset($counts[$cottageType])) {
                                 </li>
                             </ul>
                         </li>
+<<<<<<< HEAD
                         <li class="nav-header">Other</li>
 
+=======
+                        <li class="nav-header">MISCELLANEOUS</li>
+>>>>>>> 5c9f14cd12b467138a3230c0600b64d8d770be51
 
                         <li class="nav-item">
                             <a href="#" class="nav-link">
@@ -228,27 +271,18 @@ if (isset($counts[$cottageType])) {
                             </a>
                         </li>
 
-
-
                         <li class="nav-item">
-                            <a href="/logout" class="nav-link">
+                            <a href="../logout.php" class="nav-link">
                                 <i class="nav-icon far fa-circle text-danger"></i>
                                 <p>Logout</p>
                             </a>
                         </li>
-
-
                     </ul>
                 </nav>
                 <!-- /.sidebar-menu -->
             </div>
             <!-- /.sidebar -->
         </aside>
-
-
-
-        <!-- Sidebar -->
-
 
         <!-- Content Wrapper. Contains page content -->
         <div class="content-wrapper">
@@ -272,13 +306,16 @@ if (isset($counts[$cottageType])) {
 
             <!-- Main content -->
             <section class="content">
-
-
                 <div class="container-fluid">
                     <!-- Small boxes (Stat box) -->
                     <div class="row">
-                        <!-- =========================================================== -->
+                    <?php
+// Loop through the dynamic counts and generate the info boxes
+foreach ($dynamicCounts as $cottageType => $count) {
+    // Initialize the class for each iteration
+    $infoBoxClass = "";
 
+<<<<<<< HEAD
                         <?php
                         // Display counts for each cottage type
                         foreach ($counts as $cottageType => $count) {
@@ -306,10 +343,37 @@ if (isset($counts[$cottageType])) {
                             </div>
                             <!-- /.col -->
                         <?php } ?>
+=======
+    // Determine the class based on count
+    if ($count > 2) {
+        $infoBoxClass = "bg-gradient-info";
+    } elseif ($count > 1) {
+        $infoBoxClass = "bg-gradient-success";
+    } elseif ($count > 0) {
+        $infoBoxClass = "bg-gradient-warning";
+    } else {
+        $infoBoxClass = "bg-gradient-danger";
+    }
+?>
+    <div class="col-md-3 col-sm-6 col-12">
+        <div class="info-box <?= $infoBoxClass; ?>">
+            <span class="info-box-icon"><i class="far fa-bookmark"></i></span>
+            <div class="info-box-content">
+                <span class="info-box-text"><?= $cottageType; ?></span>
+                <span class="info-box-number"><?= $count; ?> Cottages</span>
+            </div>
+            <!-- /.info-box-content -->
+        </div>
+        <!-- /.info-box -->
+    </div>
+<?php } ?>
+
+>>>>>>> 5c9f14cd12b467138a3230c0600b64d8d770be51
                     </div>
                     <!-- /.row -->
 
                 </div>
+<<<<<<< HEAD
                 <!-- /.row -->
                 <!-- Main row -->
                 <div class="row">
@@ -407,9 +471,49 @@ if (isset($counts[$cottageType])) {
                     </div>
                     <!-- Left col -->
                     <section class="col-lg-7 connectedSortable">
+=======
+                <!-- /.container-fluid -->
+            </section>
+            <!-- /.content -->
+        </div>
+        <!-- /.wrapper -->
 
-                    </section>
+        <?php include '../footer.php' ?>
+>>>>>>> 5c9f14cd12b467138a3230c0600b64d8d770be51
 
+        <script src="../adminsidebar/activesidebar.js"></script>
+        <!-- jQuery -->
+        <script src="../plugins/jquery/jquery.min.js"></script>
+        <!-- jQuery UI 1.11.4 -->
+        <script src="../plugins/jquery-ui/jquery-ui.min.js"></script>
+        <!-- Resolve conflict in jQuery UI tooltip with Bootstrap tooltip -->
+        <script>
+            $.widget.bridge('uibutton', $.ui.button)
+        </script>
+        <!-- Bootstrap 4 -->
+        <script src="../plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
+        <!-- ChartJS -->
+        <script src="../plugins/chart.js/Chart.min.js"></script>
+        <!-- Sparkline -->
+        <script src="../plugins/sparklines/sparkline.js"></script>
+        <!-- JQVMap -->
+        <script src="../plugins/jqvmap/jquery.vmap.min.js"></script>
+        <script src="../plugins/jqvmap/maps/jquery.vmap.usa.js"></script>
+        <!-- jQuery Knob Chart -->
+        <script src="../plugins/jquery-knob/jquery.knob.min.js"></script>
+        <!-- daterangepicker -->
+        <script src="../plugins/moment/moment.min.js"></script>
+        <script src="../plugins/daterangepicker/daterangepicker.js"></script>
+        <!-- Tempusdominus Bootstrap 4 -->
+        <script src="../plugins/tempusdominus-bootstrap-4/js/tempusdominus-bootstrap-4.min.js"></script>
+        <!-- Summernote -->
+        <script src="../plugins/summernote/summernote-bs4.min.js"></script>
+        <!-- overlayScrollbars -->
+        <script src="../plugins/overlayScrollbars/js/jquery.overlayScrollbars.min.js"></script>
+        <!-- AdminLTE App -->
+        <script src="../dist/js/adminlte.js"></script>
+
+<<<<<<< HEAD
                     <!-- /.Left col -->
                     <!-- right col (We are only adding the ID to make the widgets sortable)-->
                     <section class="col-lg-5 connectedSortable">
@@ -586,3 +690,9 @@ if (isset($counts[$cottageType])) {
 </body>
 
 </html>
+=======
+        <!-- AdminLTE dashboard demo (This is only for demo purposes) -->
+        <script src="../dist/js/pages/dashboard.js"></script>
+    </body>
+</html>
+>>>>>>> 5c9f14cd12b467138a3230c0600b64d8d770be51

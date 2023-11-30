@@ -59,158 +59,6 @@
      
    
 
-<<<<<<< HEAD
-=======
-                        <li class="nav-item">
-                            <a href="#" class="nav-link">
-                                <i class="far fa-check-circle nav-icon"></i>
-                                <p>
-                                    Cottage/Boat Status
-                                    <i class="fas fa-angle-left right"></i>
-                                </p>
-                            </a>
-                            <ul class="nav nav-treeview">
-                                <li class="nav-item">
-                                    <a href="userboat.php" class="nav-link active">
-                                        <i class="far fa-circle nav-icon"></i>
-                                        <p>Boat</p>
-                                    </a>
-                                </li>
-                                <li class="nav-item">
-                                    <a href="usercottage.php" class="nav-link">
-                                        <i class="far fa-circle nav-icon"></i>
-                                        <p>Cottage</p>
-                                    </a>
-                                </li>
-                            </ul>
-                        </li>
-                        <li class="nav-header">MISCELLANEOUS</li>
-
-
-
-                        <li class="nav-item">
-                            <a href="#" class="nav-link">
-                                <i class="nav-icon fas fa-chart-line text-info"></i>
-                                <p>Report</p>
-                            </a>
-                        </li>
-
-
-
-                        <li class="nav-item">
-                            <a href="../logout.php" class="nav-link">
-                                <i class="nav-icon far fa-circle text-danger"></i>
-                                <p>Logout</p>
-                            </a>
-                        </li>
-
-
-                    </ul>
-                </nav>
-                <!-- /.sidebar-menu -->
-            </div>
-            <!-- /.sidebar -->
-        </aside>
-
-
-
-        <!-- Sidebar -->
-
-
-
-        <!-- Content Wrapper. Contains page content -->
-        <div class="content-wrapper">
-            <!-- Content Header (Page header) -->
-            <div class="content-header">
-                <div class="container-fluid">
-                    <div class="row mb-2">
-                        <div class="col-sm-6">
-                            <h1 class="m-0">Dashboard</h1>
-                        </div><!-- /.col -->
-                        <div class="col-sm-6">
-                            <ol class="breadcrumb float-sm-right">
-
-                            </ol>
-                        </div><!-- /.col -->
-                    </div><!-- /.row -->
-                </div><!-- /.container-fluid -->
-            </div>
-            <!-- /.content-header -->
-
-            <!-- Main content -->
-            <section class="content">
-
-                <div class="card">
-                    <div class="card-header">
-                        <h3 class="card-title">Expandable Table</h3>
-                    </div>
-                    <!-- ./card-header -->
-                    <div class="card-body">
-                        <table class="table table-bordered table-hover">
-                            <thead>
-                                <tr>
-                                    <th>#</th>
-                                    <th>Boat Name</th>
-                                    <th>Action</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <?php
-                                include '../connection/connection.php';
-
-                                // Sample array of boat names
-                                $boatNames = ["Duran Duran", "Lorwinds", "Island Rose", "Franklyn", "San Pedro de Nonok"];
-
-                                // Display boat names with buttons
-                                // Display boat names with buttons and modals
-          for ($i = 0; $i < count($boatNames); $i++) {
-            echo "<tr data-widget='expandable-table' aria-expanded='false'>";
-            echo "<td>" . ($i + 1) . "</td>";
-            echo "<td>" . $boatNames[$i] . "</td>";
-            echo "<td><button class='btn btn-primary' data-toggle='modal' data-target='#myModal" . ($i + 1) . "'>Perform Action " . ($i + 1) . "</button></td>";
-            echo "</tr>";
-
-            // Modal for each button
-            echo "<div class='modal fade' id='myModal" . ($i + 1) . "' tabindex='-1' role='dialog' aria-labelledby='exampleModalLabel' aria-hidden='true'>";
-            echo "<div class='modal-dialog' role='document'>";
-            echo "<div class='modal-content'>"; 
-            echo "<div class='modal-header'>";
-            echo "<h5 class='modal-title' id='exampleModalLabel'>Modal " . ($i + 1) . "</h5>";
-            echo "<button type='button' class='close' data-dismiss='modal' aria-label='Close'>";
-            echo "<span aria-hidden='true'>&times;</span>";
-            echo "</button>";
-            echo "</div>";
-            echo "<div class='modal-body'>";
-            echo "Modal content for boat " . ($i + 1);
-            echo "</div>";
-            echo "<div class='modal-footer'>";
-            echo "<button type='button' class='btn btn-secondary' data-dismiss='modal'>Close</button>";
-            echo "<button type='button' class='btn btn-primary'>Save changes</button>";
-            echo "</div>";
-            echo "</div>";
-            echo "</div>";
-            echo "</div>";
-          }
-                                // Close the database connection
-                                $conn->close();
-                                ?>
-
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-
-
-
-                <!-- /.card-body -->
-        </div>
-        <!-- /.card -->
-
-
-        </section>
-        <!-- /.content -->
-    </div>
->>>>>>> 5c9f14cd12b467138a3230c0600b64d8d770be51
     <!-- /.content-wrapper -->
     
 
@@ -307,7 +155,7 @@
                 ?>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
             </div>
         </div>
     </div>
@@ -347,7 +195,7 @@
                 ?>
               </div>
               <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
               </div>
             </div>
           </div>
@@ -388,7 +236,7 @@
                 ?>
               </div>
               <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
               </div>
             </div>
           </div>
@@ -429,7 +277,7 @@
                 ?>
               </div>
               <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
               </div>
             </div>
           </div>
@@ -473,7 +321,7 @@
                 
               </div>
               <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
               </div>
             </div>
           </div>

@@ -1,72 +1,71 @@
 <?php
+    include '../connection/connection.php';
 
 
 include '../userprocess/memberInsert.php';
 insertMembers();
 include '../connection/connection.php';
-//tourist count
-
 $sql = "SELECT * FROM members";
 
-// Execute the query and store the result in a variable
-$result = mysqli_query($conn, $sql);
+    // Execute the query and store the result in a variable
+    $result = mysqli_query($conn, $sql);
 
-// Check if the query was successful
-if (!$result) {
-    die("Error: " . mysqli_error($conn));
-}
-
-
-$activeTouristCount = mysqli_num_rows($result);
+    // Check if the query was successful
+    if (!$result) {
+        die("Error: " . mysqli_error($conn));
+    }
 
 
-// Total cottages
+    $activeTouristCount = mysqli_num_rows($result);
+
+
+/// Total cottages
 $totalCottages = 20;
 
 // Query to get the count of booked cottages
 $sql1 = "SELECT COUNT(cottage_type) as bookedCottages FROM bookings WHERE status = 'IN'";
 $result1 = mysqli_query($conn, $sql1);
-$row = mysqli_fetch_assoc($result1);
-$bookedCottages = $row['bookedCottages'];
+$row1 = mysqli_fetch_assoc($result1);
+$bookedCottages = $row1['bookedCottages'];
 
-// Query to get the remaining cottages
+// Query to get the total number of cottages from the full_texts table
 $sql2 = "SELECT SUM(cottage_count) as totalCottageCount FROM cottages";
 $result2 = mysqli_query($conn, $sql2);
 $row2 = mysqli_fetch_assoc($result2);
-$totalCottageCount = $row2['totalCottageCount'];;
+$totalCottageCount = $row2['totalCottageCount'];
 
 // Calculate available cottages
-$availableCottages = $totalCottages - $bookedCottages;
+$availableCottages = $totalCottages - $bookedCottages - $totalCottageCount;
 
-//boat count
-$sql2 = "SELECT * FROM boats";
+    //boat count
+    $sql2 = "SELECT * FROM boats";
 
-// Execute the query and store the result in a variable
-$result2 = mysqli_query($conn, $sql2);
+    // Execute the query and store the result in a variable
+    $result2 = mysqli_query($conn, $sql2);
 
-// Check if the query was successful
-if (!$result2) {
-    die("Error: " . mysqli_error($conn));
-}
-
-
-$activeBoatsCount = mysqli_num_rows($result2);
+    // Check if the query was successful
+    if (!$result2) {
+        die("Error: " . mysqli_error($conn));
+    }
 
 
-//ticketing agent count
-$sql3 = "SELECT * FROM Useraccounts";
+    $activeBoatsCount = mysqli_num_rows($result2);
 
-// Execute the query and store the result in a variable
-$result3 = mysqli_query($conn, $sql3);
 
-// Check if the query was successful
-if (!$result3) {
-    die("Error: " . mysqli_error($conn));
-}
+    //ticketing agent count
+    $sql3 = "SELECT * FROM Useraccounts";
 
-// Count the active Ticketing Agents
-$activeTicketingAgentsCount = mysqli_num_rows($result3);
-?>
+    // Execute the query and store the result in a variable
+    $result3 = mysqli_query($conn, $sql3);
+
+    // Check if the query was successful
+    if (!$result3) {
+        die("Error: " . mysqli_error($conn));
+    }
+
+    // Count the active Ticketing Agents
+    $activeTicketingAgentsCount = mysqli_num_rows($result3);
+    ?>
 <!DOCTYPE html>
 <html lang="en">
 
@@ -207,7 +206,7 @@ $activeTicketingAgentsCount = mysqli_num_rows($result3);
 
 
                         <li class="nav-item">
-                            <a href="/logout" class="nav-link">
+                            <a href="../logout.php" class="nav-link">
                                 <i class="nav-icon far fa-circle text-danger"></i>
                                 <p>Logout</p>
                             </a>
@@ -261,20 +260,20 @@ $activeTicketingAgentsCount = mysqli_num_rows($result3);
                                 <a href="#" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
                             </div>
 
-                        </div>
-                        <!-- ./col -->
-                        <div class="col-lg-3 col-6">
-                            <!-- small box -->
-                            <div class="small-box bg-warning">
-                                <div class="inner">
-                                    <h3><?php echo $availableCottages; ?></h3>
-                                    <p>Available Cottage</p>
-                                </div>
-                                <div class="icon">
-                                    <i class="fas fa-home"></i>
-                                </div>
-                                <a href="#" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
                             </div>
+                            <!-- ./col -->
+                            <div class="col-lg-3 col-6">
+                                <!-- small box -->
+                                <div class="small-box bg-warning">
+                                    <div class="inner">
+                                        <h3><?php echo $availableCottages; ?></h3>
+                                        <p>Available Cottage</p>
+                                    </div>
+                                    <div class="icon">
+                                        <i class="fas fa-home"></i>
+                                    </div>
+                                    <a href="#" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
+                                </div>
 
                         </div>
                         <!-- ./col -->

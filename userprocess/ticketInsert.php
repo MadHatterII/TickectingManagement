@@ -5,7 +5,7 @@ include '../connection/connection.php';
 if (isset($_POST['submit'])) {
     $ticketType = $_POST['ticketType'];
     $groupName = $_POST['groupName'];
-    $cottageType = $_POST['cottageType'];
+    $cottageType = $_POST['cottageType']; 
     $timeSchedule = $_POST['timeSchedule'];
     $contactNumber = $_POST['contactNumber'];
     $stayType = $_POST['stayType'];
