@@ -53,7 +53,10 @@ function insertMembers(){
         mysqli_stmt_bind_param($log_stmt, "iss", $user_id, $user_description, $timestamp);
         mysqli_stmt_execute($log_stmt);
 
-      
+        echo "<script>
+        alert('Ticket completed successfully!');
+        window.location.href = 'addmember.php'; 
+      </script>";
     } catch (Exception $e) {
         // If an exception was thrown, roll back the transaction
         $conn->rollback();
@@ -64,4 +67,4 @@ function insertMembers(){
 }
 }
 
-?>  
+?>

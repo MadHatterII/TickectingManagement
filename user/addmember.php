@@ -1,5 +1,4 @@
 <?php
-    include '../connection/connection.php';
 
 
 include '../userprocess/memberInsert.php';
@@ -7,16 +6,16 @@ insertMembers();
 include '../connection/connection.php';
 $sql = "SELECT * FROM members";
 
-    // Execute the query and store the result in a variable
-    $result = mysqli_query($conn, $sql);
+// Execute the query and store the result in a variable
+$result = mysqli_query($conn, $sql);
 
-    // Check if the query was successful
-    if (!$result) {
-        die("Error: " . mysqli_error($conn));
-    }
+// Check if the query was successful
+if (!$result) {
+    die("Error: " . mysqli_error($conn));
+}
 
 
-    $activeTouristCount = mysqli_num_rows($result);
+$activeTouristCount = mysqli_num_rows($result);
 
 
 /// Total cottages
@@ -37,35 +36,35 @@ $totalCottageCount = $row2['totalCottageCount'];
 // Calculate available cottages
 $availableCottages = $totalCottages - $bookedCottages - $totalCottageCount;
 
-    //boat count
-    $sql2 = "SELECT * FROM boats";
+//boat count
+$sql2 = "SELECT * FROM boats";
 
-    // Execute the query and store the result in a variable
-    $result2 = mysqli_query($conn, $sql2);
+// Execute the query and store the result in a variable
+$result2 = mysqli_query($conn, $sql2);
 
-    // Check if the query was successful
-    if (!$result2) {
-        die("Error: " . mysqli_error($conn));
-    }
-
-
-    $activeBoatsCount = mysqli_num_rows($result2);
+// Check if the query was successful
+if (!$result2) {
+    die("Error: " . mysqli_error($conn));
+}
 
 
-    //ticketing agent count
-    $sql3 = "SELECT * FROM Useraccounts";
+$activeBoatsCount = mysqli_num_rows($result2);
 
-    // Execute the query and store the result in a variable
-    $result3 = mysqli_query($conn, $sql3);
 
-    // Check if the query was successful
-    if (!$result3) {
-        die("Error: " . mysqli_error($conn));
-    }
+//ticketing agent count
+$sql3 = "SELECT * FROM Useraccounts";
 
-    // Count the active Ticketing Agents
-    $activeTicketingAgentsCount = mysqli_num_rows($result3);
-    ?>
+// Execute the query and store the result in a variable
+$result3 = mysqli_query($conn, $sql3);
+
+// Check if the query was successful
+if (!$result3) {
+    die("Error: " . mysqli_error($conn));
+}
+
+// Count the active Ticketing Agents
+$activeTicketingAgentsCount = mysqli_num_rows($result3);
+?>
 <!DOCTYPE html>
 <html lang="en">
 
@@ -206,7 +205,7 @@ $availableCottages = $totalCottages - $bookedCottages - $totalCottageCount;
 
 
                         <li class="nav-item">
-                            <a href="../logout.php" class="nav-link">
+                            <a href="/logout" class="nav-link">
                                 <i class="nav-icon far fa-circle text-danger"></i>
                                 <p>Logout</p>
                             </a>
@@ -231,34 +230,34 @@ $availableCottages = $totalCottages - $bookedCottages - $totalCottageCount;
 
                 <div class="container-fluid">
                     <!-- Small boxes (Stat box) -->
-                   <div class="row">
-                        <div class="col-lg-3 col-6">
-                            <!-- small box -->
-                            <div class="small-box bg-info">
-                                <div class="inner">
-                                    <h3><?php echo $activeTouristCount; ?></h3>
-                                    <p>Tourist</p>
+                    <div class="row">
+                            <div class="col-lg-3 col-6">
+                                <!-- small box -->
+                                <div class="small-box bg-info">
+                                    <div class="inner">
+                                        <h3><?php echo $activeTouristCount; ?></h3>
+                                        <p>Tourist</p>
+                                    </div>
+                                    <div class="icon">
+                                        <i class="fas fa-user"></i>
+                                    </div>
+                                    <a href="#" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
                                 </div>
-                                <div class="icon">
-                                    <i class="fas fa-user"></i>
-                                </div>
-                                <a href="#" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
-                            </div>
 
-                        </div>
-                        <!-- ./col -->
-                        <div class="col-lg-3 col-6">
-                            <!-- small box -->
-                            <div class="small-box bg-success">
-                                <div class="inner">
-                                    <h3><?php echo $activeBoatsCount; ?></h3>
-                                    <p>Active Boat</p>
-                                </div>
-                                <div class="icon">
-                                    <i class="fas fa-ship"></i>
-                                </div>
-                                <a href="#" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
                             </div>
+                            <!-- ./col -->
+                            <div class="col-lg-3 col-6">
+                                <!-- small box -->
+                                <div class="small-box bg-success">
+                                    <div class="inner">
+                                        <h3><?php echo $activeBoatsCount; ?></h3>
+                                        <p>Active Boat</p>
+                                    </div>
+                                    <div class="icon">
+                                        <i class="fas fa-ship"></i>
+                                    </div>
+                                    <a href="#" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
+                                </div>
 
                             </div>
                             <!-- ./col -->
@@ -275,25 +274,24 @@ $availableCottages = $totalCottages - $bookedCottages - $totalCottageCount;
                                     <a href="#" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
                                 </div>
 
-                        </div>
-                        <!-- ./col -->
-                        <div class="col-lg-3 col-6">
-                            <!-- small box -->
-                            <div class="small-box bg-danger">
-                                <div class="inner">
-                                    <h3><?php echo $activeTicketingAgentsCount; ?></h3>
-                                    <p>Ticketing Agent</p>
-                                </div>
-                                <div class="icon">
-                                    <i class="fas fa-user-secret"></i>
-                                </div>
-                                <a href="#" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
                             </div>
+                            <!-- ./col -->
+                            <div class="col-lg-3 col-6">
+                                <!-- small box -->
+                                <div class="small-box bg-danger">
+                                    <div class="inner">
+                                        <h3><?php echo $activeTicketingAgentsCount; ?></h3>
+                                        <p>Ticketing Agent</p>
+                                    </div>
+                                    <div class="icon">
+                                        <i class="fas fa-user-secret"></i>
+                                    </div>
+                                    <a href="#" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
+                                </div>
 
+                            </div>
+                            <!-- ./col -->
                         </div>
-                        <!-- ./col -->
-                    </div>
-                    <!-- /.row -->
                     <!-- /.row -->
                     <!-- Main row -->
                     <!-- <div class="row"> -->
@@ -402,7 +400,12 @@ $availableCottages = $totalCottages - $bookedCottages - $totalCottageCount;
                     <!-- </section> -->
                     <!-- right col -->
                     <hr>
-                   
+                    <div class="row mt-3">
+                        <div class="col-12 text-center">
+                            <button type="button" class="btn btn-primary" onclick="submitForms()">Submit</button>
+                        </div>
+                    </div>
+                    <hr>
 
                     <!-- </div> -->
 
