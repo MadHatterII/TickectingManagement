@@ -1,4 +1,4 @@
-Bernie T. Calope
+
 <?php
 // Initialize a session
 session_start();
@@ -25,7 +25,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     // Set the ID column name based on login type
     if ($login_type == "admin") {
         $query = "SELECT * FROM admin WHERE username = '$user' AND password = '$password'";
-        $id_column = "adminID"; 
+        $id_column = "AdminID"; 
     } elseif ($login_type == "ticketing_agent") {
         $query = "SELECT * FROM useraccounts WHERE username = '$user' AND password = '$password'";
         $id_column = "agentID"; 
@@ -57,6 +57,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             header("Location: user/userdash.php");
             exit;}
     } else if ($login_type == "admin") {
-            header("Location: adminindex.php");
+            header("Location: admin/adminhome.php");
 }
 ?>

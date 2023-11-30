@@ -9,9 +9,10 @@ if (isset($_POST['submit'])) {
     $cottageType = $_POST['cottageType'];
     $timeSchedule = $_POST['timeSchedule'];
     $contactNumber = $_POST['contactNumber'];
+    $date=$_POST['date'];
     $stayType = $_POST['stayType'];
     $address = $_POST['address'];
-    $checkIn = $_POST['checkIn'];
+    $checkIn = $_POST['checkinTime'];
 
     // Check if the group name already exists in the database
     $checkGroupNameSql = "SELECT COUNT(*) FROM bookings WHERE group_name = '$groupName'";
@@ -27,8 +28,8 @@ if (isset($_POST['submit'])) {
     }
 
     // If the group name does not exist, insert the data into the database
-    $sql = "INSERT INTO bookings (ticket_type, group_name, cottage_type, checkinTime, checkoutTime, contact_number, address, stayType) 
-            VALUES ('$ticketType', '$groupName', '$cottageType','$checkIn', '$timeSchedule', '$contactNumber', '$address', '$stayType')";
+    $sql = "INSERT INTO bookings (ticket_type, group_name, cottage_type,date, checkinTime, checkoutTime, contact_number, address, stayType) 
+            VALUES ('$ticketType', '$groupName', '$cottageType','$date','$checkIn', '$timeSchedule', '$contactNumber', '$address', '$stayType')";
 
     // Execute the query and store the result
     $result = $conn->query($sql);
@@ -42,9 +43,10 @@ if (isset($_POST['submit'])) {
         // If successful, display an alert and redirect
         $encodedGroupName = urlencode($groupName);
         echo "<script>
-                alert('Ticket submitted. Add members.');
-                window.location.href = '../user/addmember.php?groupName=$encodedGroupName'; 
-              </script>";
+        alert('Ticket submitted. Add members.');
+        window.location.href = '../user/addmember.php?groupName=$encodedGroupName'; 
+      </script>";
+    
     } else {
         // If not successful, display an alert and stay on the same page
         echo "<script>

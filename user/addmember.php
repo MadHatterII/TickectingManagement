@@ -1,70 +1,65 @@
 <?php
+    include '../connection/connection.php';
 
 
-include '../userprocess/memberInsert.php';
-insertMembers();
-include '../connection/connection.php';
-$sql = "SELECT * FROM members";
+    //tourist count
 
-// Execute the query and store the result in a variable
-$result = mysqli_query($conn, $sql);
+    $sql = "SELECT * FROM members";
 
-// Check if the query was successful
-if (!$result) {
-    die("Error: " . mysqli_error($conn));
-}
+    // Execute the query and store the result in a variable
+    $result = mysqli_query($conn, $sql);
 
-
-$activeTouristCount = mysqli_num_rows($result);
+    // Check if the query was successful
+    if (!$result) {
+        die("Error: " . mysqli_error($conn));
+    }
 
 
-/// Total cottages
-$totalCottages = 20;
-
-// Query to get the count of booked cottages
-$sql1 = "SELECT COUNT(cottage_type) as bookedCottages FROM bookings WHERE status = 'IN'";
-$result1 = mysqli_query($conn, $sql1);
-$row1 = mysqli_fetch_assoc($result1);
-$bookedCottages = $row1['bookedCottages'];
-
-// Query to get the total number of cottages from the full_texts table
-$sql2 = "SELECT SUM(cottage_count) as totalCottageCount FROM cottages";
-$result2 = mysqli_query($conn, $sql2);
-$row2 = mysqli_fetch_assoc($result2);
-$totalCottageCount = $row2['totalCottageCount'];
-
-// Calculate available cottages
-$availableCottages = $totalCottages - $bookedCottages - $totalCottageCount;
-
-//boat count
-$sql2 = "SELECT * FROM boats";
-
-// Execute the query and store the result in a variable
-$result2 = mysqli_query($conn, $sql2);
-
-// Check if the query was successful
-if (!$result2) {
-    die("Error: " . mysqli_error($conn));
-}
+    $activeTouristCount = mysqli_num_rows($result);
 
 
-$activeBoatsCount = mysqli_num_rows($result2);
+    // cottage query
+    $totalCottages = 20;
+    $sql1 = "SELECT COUNT(cottage_type) as cottage FROM bookings WHERE status = 'IN'";
+
+    // Execute the query and store the result in a variable
+    $result1 = mysqli_query($conn, $sql1);
+    $row = mysqli_fetch_assoc($result1);
+    $bookedCottages = $row['cottage'];
 
 
-//ticketing agent count
-$sql3 = "SELECT * FROM Useraccounts";
 
-// Execute the query and store the result in a variable
-$result3 = mysqli_query($conn, $sql3);
+    $activeAvailableCottagesCount = $totalCottages - $bookedCottages;
 
-// Check if the query was successful
-if (!$result3) {
-    die("Error: " . mysqli_error($conn));
-}
+    //boat count
+    $sql2 = "SELECT * FROM boats";
 
-// Count the active Ticketing Agents
-$activeTicketingAgentsCount = mysqli_num_rows($result3);
-?>
+    // Execute the query and store the result in a variable
+    $result2 = mysqli_query($conn, $sql2);
+
+    // Check if the query was successful
+    if (!$result2) {
+        die("Error: " . mysqli_error($conn));
+    }
+
+
+    $activeBoatsCount = mysqli_num_rows($result2);
+
+
+    //ticketing agent count
+    $sql3 = "SELECT * FROM Useraccounts";
+
+    // Execute the query and store the result in a variable
+    $result3 = mysqli_query($conn, $sql3);
+
+    // Check if the query was successful
+    if (!$result3) {
+        die("Error: " . mysqli_error($conn));
+    }
+
+    // Count the active Ticketing Agents
+    $activeTicketingAgentsCount = mysqli_num_rows($result3);
+    ?>
 <!DOCTYPE html>
 <html lang="en">
 
@@ -205,7 +200,7 @@ $activeTicketingAgentsCount = mysqli_num_rows($result3);
 
 
                         <li class="nav-item">
-                            <a href="/logout" class="nav-link">
+                            <a href="../logout.php" class="nav-link">
                                 <i class="nav-icon far fa-circle text-danger"></i>
                                 <p>Logout</p>
                             </a>
@@ -265,7 +260,7 @@ $activeTicketingAgentsCount = mysqli_num_rows($result3);
                                 <!-- small box -->
                                 <div class="small-box bg-warning">
                                     <div class="inner">
-                                        <h3><?php echo $availableCottages; ?></h3>
+                                        <h3><?php echo $activeAvailableCottagesCount; ?></h3>
                                         <p>Available Cottage</p>
                                     </div>
                                     <div class="icon">
