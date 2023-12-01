@@ -12,7 +12,7 @@ include('../connection/connection.php');
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Admin | Prices</title>
+    <title>User | Cottage</title>
 
 
     <!-- Font Awesome -->
@@ -49,6 +49,12 @@ include('../connection/connection.php');
         font-size: 9px;
         /* Adjust the font size as needed */
     }
+    /* Your external stylesheet.css */
+.no-records {
+    color: red;
+    text-align: center;
+}
+
 </style>
 
 <body class="hold-transition sidebar-mini layout-fixed">
@@ -154,12 +160,14 @@ include('../connection/connection.php');
 
 
 
+
                         <li class="nav-item">
-                            <a href="/logout" class="nav-link">
+                            <a href="../logout.php" class="nav-link">
                                 <i class="nav-icon far fa-circle text-danger"></i>
                                 <p>Logout</p>
                             </a>
                         </li>
+
 
 
                     </ul>
@@ -208,15 +216,27 @@ include('../connection/connection.php');
                             <?php
                             include '../connection/connection.php';
 
-                            // SQL query to get cottage information
+                            // SQL query to update cottage_count based on 'OUT' status in bookings table
+                            $updateCottageCountQuery = "
+                                UPDATE cottages c
+                                SET cottage_count = (
+                                    SELECT COUNT(*) 
+                                    FROM bookings b 
+                                    WHERE b.cottage_type = c.cottage_type 
+                                    AND b.status = 'OUT'
+                                )
+                            ";
+                            $conn->query($updateCottageCountQuery);
+
+                            // SQL query to get updated cottage information
                             $cottageQuery = "SELECT cottage_type, cottage_count FROM cottages";
                             $cottageResult = $conn->query($cottageQuery);
 
-                            // Display cottage information in the specified format
+                            // Display updated cottage information in the specified format
                             while ($cottageRow = $cottageResult->fetch_assoc()) {
                                 echo '<div class="col-md-3 col-sm-6 col-12">';
                                 echo '<div class="info-box">';
-                                echo '<span class="info-box-icon bg-info"><i class="far fa-envelope"></i></span>';
+                                echo '<span class="info-box-icon bg-info"><i class="fa fa-home"></i></span>';
                                 echo '<div class="info-box-content">';
                                 echo '<span class="info-box-text">' . $cottageRow['cottage_type'] . '</span>';
                                 echo '<span class="info-box-number">' . $cottageRow['cottage_count'] . '</span>';
@@ -229,6 +249,7 @@ include('../connection/connection.php');
                             $conn->close();
                             ?>
                         </div>
+
                         <!-- /.col -->
 
                     </div>
@@ -283,7 +304,7 @@ include('../connection/connection.php');
                                         $startIndex = ($currentPage - 1) * $recordsPerPage;
 
                                         // SQL query to retrieve limited records from the database
-                                        $sql = "SELECT * FROM bookings ORDER BY cottage_type DESC LIMIT $startIndex, $recordsPerPage";
+                                        $sql = "SELECT id,cottage_type, stayType,group_name,status FROM bookings ORDER BY cottage_type DESC LIMIT $startIndex, $recordsPerPage";
                                         $result = $conn->query($sql);
 
                                         // Display data in the table
@@ -296,13 +317,13 @@ include('../connection/connection.php');
                                                 echo "<td>" . $row['stayType'] . "</td>";
                                                 echo "<td>" . $row['group_name'] . "</td>";
                                                 echo "<td>" . $row['status'] . "</td>";
-                                                echo "<td><button class='btn btn-primary' data-row-id='" . $row['id'] . "' data-cottage-type='" . $row['cottage_type'] . "' onclick='changeStatus(this)'>Edit</button></td>";
+                                                echo "<td><button class='btn btn-primary' data-row-id='" . $row['id'] . "' data-cottage-type='" . $row['cottage_type'] . "' onclick='changeStatus(this)'>Check Out</button></td>";
 
                                                 echo "</tr>";
                                                 $counter++;
                                             }
                                         } else {
-                                            echo "<tr><td colspan='5'>No records found</td></tr>";
+                                            echo "<tr><td class='no-records' colspan='5'>No records found</td></tr>";
                                         }
 
                                         // Close connection
@@ -317,21 +338,26 @@ include('../connection/connection.php');
                                     <ul class="pagination pagination-sm m-0 float-right">
                                         <?php
                                         // Calculate the total number of pages
-                                        $totalPages = ceil($counter / $recordsPerPage);
+                                        $totalPages = isset($counter) ? ceil($counter / $recordsPerPage) : 0;
 
                                         // Generate pagination links
                                         if ($currentPage > 1) {
                                             echo "<li class='page-item'><a class='page-link' href='?page=" . ($currentPage - 1) . "'>&laquo;</a></li>";
                                         }
+
                                         for ($i = 1; $i <= $totalPages; $i++) {
                                             echo "<li class='page-item " . ($i == $currentPage ? 'active' : '') . "'><a class='page-link' href='?page=$i'>$i</a></li>";
                                         }
+
+                                        // Check if there is a next page
                                         if ($currentPage < $totalPages) {
                                             echo "<li class='page-item'><a class='page-link' href='?page=" . ($currentPage + 1) . "'>&raquo;</a></li>";
                                         }
                                         ?>
                                     </ul>
                                 </div>
+
+
                                 <!-- End Pagination -->
 
                             </div>
@@ -451,27 +477,22 @@ include('../connection/connection.php');
             });
 
             function changeStatus(button) {
-                var rowId = $(button).data('row-id');
-                var cottageType = $(button).data('cottage-type');
-                console.log("Row ID:", rowId);
-                console.log("Cottage Type:", cottageType);
+                var bookingId = button.getAttribute('data-row-id');
+                var cottageType = button.getAttribute('data-cottage-type');
 
-                // Make an AJAX request to update the status
-                $.ajax({
-                    type: "POST",
-                    url: "../userprocess/SetOutCottage.php", // Replace with your server-side script
-                    data: {
-                        row_id: rowId,
-                        new_status: 'OUT'
-                    },
-                    success: function(response) {
-                        // Update the UI if needed
-                        console.log("Response:", response);
-                    },
-                    error: function(error) {
-                        console.error("Error:", error);
+                // Disable the button to prevent multiple clicks
+                button.disabled = true;
+
+                // Send AJAX request to update status
+                var xhr = new XMLHttpRequest();
+                xhr.onreadystatechange = function() {
+                    if (xhr.readyState == 4 && xhr.status == 200) {
+                        // Reload the page or update the UI as needed
+                        window.location.reload();
                     }
-                });
+                };
+                xhr.open("GET", "../userprocess/SetOutCottage.php?booking_id=" + bookingId + "&cottage_type=" + cottageType, true);
+                xhr.send();
             }
         </script>
 
@@ -514,4 +535,4 @@ include('../connection/connection.php');
         <script src="../dist/js/pages/dashboard.js"></script>
 </body>
 
-</html>     
+</html>
