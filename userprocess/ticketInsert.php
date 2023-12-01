@@ -11,7 +11,7 @@ if (isset($_POST['submit'])) {
     $contactNumber = $_POST['contactNumber'];
     $stayType = $_POST['stayType'];
     $address = $_POST['address'];
-    $checkIn = $_POST['checkIn'];
+    $checkIn = $_POST['checkinTime'];
 
     // Check if the group name already exists in the database
     $checkGroupNameSql = "SELECT COUNT(*) FROM bookings WHERE group_name = '$groupName'";

@@ -1,3 +1,12 @@
+
+<?php
+include '../connection/connection.php';
+
+// Fetch boat data from the database
+$sql = "SELECT DISTINCT boat FROM bookings";
+$result = $conn->query($sql);
+
+?>
 <!DOCTYPE html>
 <html lang="en">
 
@@ -189,50 +198,30 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                <?php
-                                include '../connection/connection.php';
-
-                                // Sample array of boat names
-                                $boatNames = ["Duran Duran", "Lorwinds", "Island Rose", "Franklyn", "San Pedro de Nonok"];
-
-                                // Display boat names with buttons
-                                // Display boat names with buttons and modals
-          for ($i = 0; $i < count($boatNames); $i++) {
-            echo "<tr data-widget='expandable-table' aria-expanded='false'>";
-            echo "<td>" . ($i + 1) . "</td>";
-            echo "<td>" . $boatNames[$i] . "</td>";
-            echo "<td><button class='btn btn-primary' data-toggle='modal' data-target='#myModal" . ($i + 1) . "'>Perform Action " . ($i + 1) . "</button></td>";
-            echo "</tr>";
-
-            // Modal for each button
-            echo "<div class='modal fade' id='myModal" . ($i + 1) . "' tabindex='-1' role='dialog' aria-labelledby='exampleModalLabel' aria-hidden='true'>";
-            echo "<div class='modal-dialog' role='document'>";
-            echo "<div class='modal-content'>"; 
-            echo "<div class='modal-header'>";
-            echo "<h5 class='modal-title' id='exampleModalLabel'>Modal " . ($i + 1) . "</h5>";
-            echo "<button type='button' class='close' data-dismiss='modal' aria-label='Close'>";
-            echo "<span aria-hidden='true'>&times;</span>";
-            echo "</button>";
-            echo "</div>";
-            echo "<div class='modal-body'>";
-            echo "Modal content for boat " . ($i + 1);
-            echo "</div>";
-            echo "<div class='modal-footer'>";
-            echo "<button type='button' class='btn btn-secondary' data-dismiss='modal'>Close</button>";
-            echo "<button type='button' class='btn btn-primary'>Save changes</button>";
-            echo "</div>";
-            echo "</div>";
-            echo "</div>";
-            echo "</div>";
-          }
-                                // Close the database connection
-                                $conn->close();
-                                ?>
-
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
+                    <?php
+                    if ($result->num_rows > 0) {
+                        $rowNumber = 1;
+                        while ($row = $result->fetch_assoc()) {
+                            echo "<tr>";
+                            // echo "<td>" . $row["id"] . "</td>"; // Assuming 'boat_id' is the column name for the boat ID
+                            echo "<td>" . $rowNumber . "</td>"; 
+                            echo "<td>" . $row["boat"] . "</td>"; // Replace 'boat_name' with the actual column name for boat name
+                            echo "<td><button type='button' class='btn btn-primary view-details' data-toggle='modal' data-target='#myModal' data-boat-name='" . $row["boat"] . "'>View Details</button></td>";
+                            echo "</tr>";
+                            $rowNumber++;
+                        }
+                    } else {
+                        echo "<tr><td colspan='3'>No boats found</td></tr>";
+                    }
+                    ?>
+                </tbody>
+            </table>
+        </div>
+    </div>
+                <?php
+    // Close the database connection
+    $conn->close();
+    ?>
 
 
 
@@ -253,8 +242,60 @@
 
 
 
+    <div class="modal" id="myModal">
+    <div class="modal-dialog">
+        <div class="modal-content">
 
+            <!-- Modal Header -->
+            <div class="modal-header">
+                <h4 class="modal-title">Group Names</h4>
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+            </div>
 
+            <!-- Modal Body -->
+            <div class="modal-body">
+                <table class="table">
+                    
+                    <tbody>
+                        <tr>
+                            <td id="groupNameCell"></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Modal Footer -->
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<script>
+    document.querySelectorAll('.view-details').forEach(function (button) {
+        button.addEventListener('click', function () {
+            var boatName = this.getAttribute('data-boat-name');
+
+            $.ajax({
+                type: 'GET',
+                url: '../userprocess/get_group_name.php',
+                data: { boatName: boatName },
+                success: function (response) {
+                    // Assuming response is a single group name
+                    var groupName = response;
+
+                    // Update the group name in the modal table cell
+                    document.getElementById('groupNameCell').innerHTML = response;
+                },
+                error: function () {
+                    console.error('Error retrieving group name.');
+                }
+            });
+        });
+    });
+</script>
 
 
 

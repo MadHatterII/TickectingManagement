@@ -11,21 +11,27 @@ function displayCottageTable($conn, $cottageType) {
         echo '<table class="table table-hover text-nowrap">
                 <thead>
                     <tr>
+                    <th>#</th>
                         <th>Cottage Type</th>
                         <th>Stay Type</th>
                         <th>Group Names</th>
+                        <th>Action</th>
                     </tr>
                 </thead>
                 <tbody>';
         while ($row = $result->fetch_assoc()) {
+            $counter = 1;
             $stayType = $row["stayType"];
             $groupName = $row["group_name"];
 
             echo '<tr>
+                     <td>". $counter ."</td
                     <td>' . $cottageType . '</td>
                     <td>' . $stayType . '</td>
                     <td>' . $groupName . '</td>
+                    <td><button class="btn btn-primary">Edit</button></td>
                   </tr>';
+                  $counter++;
         }
         echo '</tbody></table>';
     } else {
@@ -55,18 +61,26 @@ if (isset($_GET['q'])) {
             echo '<table class="table table-hover text-nowrap">
                     <thead>
                         <tr>
+                        <th>#</th>
                             <th>Cottage Type</th>
                             <th>Stay Type</th>
                             <th>Group Names</th>
+                            <th>Action</th>
                         </tr>
                     </thead>
                     <tbody>';
+                    $counter = 1;      
             while ($row = $result->fetch_assoc()) {
+                
                 echo '<tr>
+                        <td>'. $counter .'</td>
                         <td>' . $row["cottage_type"] . '</td>
                         <td>' . $row["stayType"] . '</td>
                         <td>' . $row["group_name"] . '</td>
+                        <td><button class="btn btn-primary">Edit</button></td>
+
                       </tr>';
+                      $counter++;
             }
             echo '</tbody></table>';
         } else {
@@ -83,9 +97,11 @@ if (isset($_GET['q'])) {
         echo '<table id="originalTable" class="table table-hover text-nowrap">
                 <thead>
                     <tr>
+                    <th>#</th>
                         <th>Cottage Type</th>
                         <th>Stay Type</th>
                         <th>Group Names</th>
+                        <th>Action</th>
                     </tr>
                 </thead>
                 <tbody>';
