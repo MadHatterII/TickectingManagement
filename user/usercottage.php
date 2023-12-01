@@ -514,4 +514,4 @@ include('../connection/connection.php');
         <script src="../dist/js/pages/dashboard.js"></script>
 </body>
 
-</html>
+</html>     
