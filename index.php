@@ -1,3 +1,49 @@
+
+<?php
+// Initialize a session
+session_start();
+
+// Check if the user is already logged in and redirect them if they are
+if (isset($_SESSION["user_id"])) {
+    header("Location: welcome.php");
+    exit;
+}
+
+// Check if the form is submitted
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
+   include '../connection/connection.php';
+
+    // Get user inputs from the form
+    $email = $_POST["email"];
+    $password = $_POST["password"];
+
+    // Validate and sanitize inputs (you should use a more robust validation and sanitization method)
+    $email = mysqli_real_escape_string($db_connection, $email);
+    $password = mysqli_real_escape_string($db_connection, $password);
+
+    if ($_POST["login_type"] == "ticketing_agent") {
+        // Query the database for Ticketing Agents
+        $query = "SELECT * FROM users WHERE email = '$email' AND password = '$password'";
+    } elseif ($_POST["login_type"] == "admin") {
+        // Query the database for Admins
+        $query = "SELECT * FROM admin WHERE email = '$email' AND password = '$password'";
+    }
+
+    $result = mysqli_query($db_connection, $query);
+
+    if (mysqli_num_rows($result) == 1) {
+        // User exists, log them in and redirect to a welcome page
+        $_SESSION["user_id"] = $user_id; // Store user information in the session
+        header("Location: index.php");
+        exit;
+    } else {
+        $login_error = "Invalid email or password. Please try again.";
+    }
+
+    // Close the database connection
+    mysqli_close($db_connection);
+}
+?>
 <!DOCTYPE html>
 <html lang="en">
 
