@@ -83,7 +83,10 @@ if (!empty($latestGroupName)) {
     if (!$insertResult) {
         die("Error inserting into ticket table: " . mysqli_error($conn));
     } else {
-        echo "Ticket record inserted successfully!";
+        echo "<script>
+        alert('Ticket completed successfully!');
+        window.location.href = 'viewticket.php'; 
+      </script>";
     }
 } else {
     echo "Latest groupName not found.";
