@@ -2,35 +2,38 @@
 // Include your database connection file
 include('../connection/connection.php');
 
+// Function to display a row in the table
+function displayTableRow($counter, $cottageType, $stayType, $groupName, $status, $id)
+{
+    echo "<tr>";
+    echo "<td>$counter</td>";
+    echo "<td>$cottageType</td>";
+    echo "<td>$stayType</td>";
+    echo "<td>$groupName</td>";
+    echo "<td>$status</td>";
+    echo "<td><button class='btn btn-primary' data-row-id='$id' data-cottage-type='$cottageType' onclick='changeStatus(this)'>Check Out</button></td>";
+    echo "</tr>";
+}
+
 // Function to display the cottage table structure
-function displayCottageTable($conn, $cottageType) {
+function displayCottageTable($conn, $cottageType)
+{
     $sql = "SELECT DISTINCT stayType, group_name FROM bookings WHERE cottage_type = '$cottageType'";
     $result = $conn->query($sql);
 
     if ($result->num_rows > 0) {
-        echo '<table class="table table-hover text-nowrap">
-                <thead>
-                    <tr>
-                        <th>Cottage Type</th>
-                        <th>Stay Type</th>
-                        <th>Group Names</th>
-                    </tr>
-                </thead>
-                <tbody>';
+        echo '<tbody>';
+        $counter = 1;
         while ($row = $result->fetch_assoc()) {
             $stayType = $row["stayType"];
             $groupName = $row["group_name"];
-
-            echo '<tr>
-                    <td>' . $cottageType . '</td>
-                    <td>' . $stayType . '</td>
-                    <td>' . $groupName . '</td>
-                  </tr>';
+            displayTableRow($counter, $cottageType, $stayType, $groupName, '', '');
+            $counter++;
         }
-        echo '</tbody></table>';
+        echo '</tbody>';
     } else {
         // Display a message if no records are found for the current cottage type
-        echo '<p>No records found for ' . $cottageType . '.</p>';
+        echo '<tbody><tr><td class="no-records" colspan="6">No records found for ' . $cottageType . '.</td></tr></tbody>';
     }
 }
 
@@ -55,22 +58,37 @@ if (isset($_GET['q'])) {
             echo '<table class="table table-hover text-nowrap">
                     <thead>
                         <tr>
-                            <th>Cottage Type</th>
-                            <th>Stay Type</th>
-                            <th>Group Names</th>
+                        <th>#</th>
+                        <th>Cottage Type</th>
+                        <th>Stay Type</th>
+                        <th>Group Names</th>
+                        <th>Status</th>
+                        <th>Action</th>
+                        </tr>
+                    </thead>';
+            $counter = 1; // Initialize the counter
+
+            while ($row = $result->fetch_assoc()) {
+                displayTableRow($counter, $row['cottage_type'], $row['stayType'], $row['group_name'], $row['status'], $row['id']);
+                $counter++; // Increment the counter for each row
+            }
+
+
+            echo '</table>';
+        } else {
+            echo '
+            <table class="table table-hover text-nowrap">
+                    <thead>
+                        <tr>
+                        <th>#</th>
+                        <th>Cottage Type</th>
+                        <th>Stay Type</th>
+                        <th>Group Names</th>
+                        <th>Status</th>
+                        <th>Action</th>
                         </tr>
                     </thead>
-                    <tbody>';
-            while ($row = $result->fetch_assoc()) {
-                echo '<tr>
-                        <td>' . $row["cottage_type"] . '</td>
-                        <td>' . $row["stayType"] . '</td>
-                        <td>' . $row["group_name"] . '</td>
-                      </tr>';
-            }
-            echo '</tbody></table>';
-        } else {
-            echo '<p>No records found for the search query.</p>';
+                    <br></table><p class="no-records">No records found for the search query.</p>';
         }
     }
 } else {
@@ -83,19 +101,25 @@ if (isset($_GET['q'])) {
         echo '<table id="originalTable" class="table table-hover text-nowrap">
                 <thead>
                     <tr>
+                        <th>#</th>
                         <th>Cottage Type</th>
                         <th>Stay Type</th>
                         <th>Group Names</th>
+                        <th>Status</th>
+                        <th>Action</th>
                     </tr>
-                </thead>
-                <tbody>';
+                </thead>';
+
         while ($cottageTypeRow = $cottageTypesResult->fetch_assoc()) {
             $cottageType = $cottageTypeRow["cottage_type"];
             displayCottageTable($conn, $cottageType);
         }
-        echo '</tbody></table>';
+
+        echo '</table>';
     } else {
         echo '<p>No distinct cottage types found.</p>';
     }
 }
-?>
+
+// Close connection
+$conn->close();

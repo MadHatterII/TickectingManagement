@@ -109,9 +109,9 @@ $activeTicketingAgentsCount = mysqli_num_rows($result3);
     <div class="wrapper">
 
         <!-- Preloader -->
-        <div class="preloader flex-column justify-content-center align-items-center">
+        <!-- <div class="preloader flex-column justify-content-center align-items-center">
             <img class="animation__shake" src="../dist/img/AdminLTELogo.png" alt="AdminLTELogo" height="60" width="60">
-        </div>
+        </div> -->
 
         <?php include '../userside/nav.php'; ?>
 
@@ -130,9 +130,22 @@ $activeTicketingAgentsCount = mysqli_num_rows($result3);
                     <div class="image">
                         <img src="../img/canigs.png" class="img-circle elevation-2" alt="User Image">
                     </div>
-                    <div class="info">
-                        <a href="#" class="d-block">Alexander Pierce</a>
-                    </div>
+                    <?php
+                        // Start or resume the session
+                
+
+                        // Check if agentID and Username are set in the session
+                        if (isset($_SESSION['agentID']) && isset($_SESSION['username'])&& isset($_SESSION['lastname'])) {
+                            // Display the user's name (agentID) and username from the session
+                            echo '<div class="info">
+                            <a href="#" class="d-block">'. $_SESSION['username'] .' '. $_SESSION['lastname'] . '</a>
+                            </div>';
+                        } else {
+                            // Default text if agentID or Username is not set
+                            echo '<a href="#" class="d-block">Guest</a>';
+                        }
+                        ?>
+                    
                 </div>
 
 
@@ -191,26 +204,32 @@ $activeTicketingAgentsCount = mysqli_num_rows($result3);
                                 </li>
                             </ul>
                         </li>
-                        <li class="nav-header">MISCELLANEOUS</li>
+                        <li class="nav-header">Others</li>
 
 
 
                         <li class="nav-item">
-                            <a href="#" class="nav-link">
+                            <a href="userprofile.php" class="nav-link">
                                 <i class="nav-icon fas fa-chart-line text-info"></i>
-                                <p>Report</p>
+                                <p>Profile</p>
                             </a>
                         </li>
 
 
 
+                      
                         <li class="nav-item">
+
                             <a href="../logout.php" class="nav-link">
                                 <i class="nav-icon far fa-circle text-danger"></i>
                                 <p>Logout</p>
                             </a>
-                        </li>
-
+                      </li>
+                                <a href="../logout.php" class="nav-link">
+                                    <i class="nav-icon far fa-circle text-danger"></i>
+                                    <p>Logout</p>
+                                </a>
+                       
 
                     </ul>
                 </nav>
@@ -399,13 +418,7 @@ $activeTicketingAgentsCount = mysqli_num_rows($result3);
 
                     <!-- </section> -->
                     <!-- right col -->
-                    <hr>
-                    <div class="row mt-3">
-                        <div class="col-12 text-center">
-                            <button type="button" class="btn btn-primary" onclick="submitForms()">Submit</button>
-                        </div>
-                    </div>
-                    <hr>
+                   
 
                     <!-- </div> -->
 

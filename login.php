@@ -1,16 +1,20 @@
-Bernie T. Calope
 <?php
 // Initialize a session
 session_start();
 
 // Check if the user is already logged in and redirect them if they are
-if (isset($_SESSION["user_id"])) {
-    header("Location: user/userdash.php");
+if (isset($_SESSION["agentID"])) {
+    // Check the user type and redirect accordingly
+    if ($_SESSION["login_type"] == "admin") {
+        header("Location: ./admin/adminhome.php");
+    } elseif ($_SESSION["login_type"] == "ticketing_agent") {
+        header("Location: ./user/userdash.php");
+    }
     exit;
 }
 
 // Include the database connection
-include "connection/connection.php";
+include "./connection/connection.php";
 
 // Check if the form is submitted
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
@@ -18,17 +22,17 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $password = $_POST["password"];
     $login_type = $_POST["login_type"];
 
-    // Validate and sanitize inputs 
+    // Validate and sanitize inputs (you should use a more robust validation and sanitization method)
     $user = mysqli_real_escape_string($conn, $user);
     $password = mysqli_real_escape_string($conn, $password);
 
     // Set the ID column name based on login type
     if ($login_type == "admin") {
         $query = "SELECT * FROM admin WHERE username = '$user' AND password = '$password'";
-        $id_column = "adminID"; 
+        $id_column = "adminID"; // Use the correct column name for the ID in the admin table
     } elseif ($login_type == "ticketing_agent") {
         $query = "SELECT * FROM useraccounts WHERE username = '$user' AND password = '$password'";
-        $id_column = "agentID"; 
+        $id_column = "agentID"; // Use the correct column name for the ID in the useraccounts table
     } else {
         $login_error = "Invalid login type. Please try again.";
     }
@@ -38,25 +42,19 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     if (mysqli_num_rows($result) == 1) {
         // User exists, log them in and redirect to a welcome page
         $row = mysqli_fetch_assoc($result); // Retrieve user data
-        $_SESSION["user_id"] = $row[$id_column]; // Store user ID in the session
-        $_SESSION["user_name"] = $row["FirstName"]; // Store user name in the session
+        $_SESSION["agentID"] = $row[$id_column]; // Store user ID in the session
+        $_SESSION["username"] = $row["FirstName"]; // Store user name in the session
+        $_SESSION["lastname"] = $row["LastName"];
+        $_SESSION["login_type"] = $login_type; // Store login type in the session
 
-        
-        } if ($login_type == "ticketing_agent") {
-            $user_id = $_SESSION["user_id"];
-            $user_description = "Logged in";
-            $timestamp = date("Y-m-d H:i:s");
-        
-            // Insert the log into the user_logs table
-            $sql = "INSERT INTO user_logs (user_id, activity_description, timestamp) VALUES (?, ?, ?)";
-        
-            $log_stmt = mysqli_prepare($conn, $sql);
-            mysqli_stmt_bind_param($log_stmt, "iss", $user_id, $user_description, $timestamp);
-            mysqli_stmt_execute($log_stmt);
-            
-            header("Location: user/userdash.php");
-            exit;}
-    } else if ($login_type == "admin") {
-            header("Location: adminindex.php");
+        if ($login_type == "admin") {
+            header("Location: ./admin/adminhome.php");
+        } elseif ($login_type == "ticketing_agent") {
+            header("Location: ./user/userdash.php");
+        }
+        exit;
+    } else {
+        $login_error = "Invalid user or password. Please try again.";
+    }
 }
 ?>

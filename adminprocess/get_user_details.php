@@ -1,6 +1,7 @@
 <?php
 include '../connection/connection.php';
 
+// Check for agentID in $_POST
 if (isset($_POST['agentID'])) {
     $agentID = $_POST['agentID'];
 
@@ -13,38 +14,19 @@ if (isset($_POST['agentID'])) {
 
         // Echo the HTML content for the modal body
         echo '<div class="user-details">
-        <img src="https://pyxis.nymag.com/v1/imgs/8a1/990/cd4d27fab205553dd1c9d5243b1fe79ffb-16-Chris-Hemsworth.rsquare.w330.jpg" alt="" />
-        <table>
-            <tr>
-                <th>First Name :</th>
-                <td>' . $row['FirstName'] . '</td>
-            </tr>
-            <tr>
-                <th>Last Name :</th>
-                <td>' . $row['LastName'] . '</td>
-            </tr>
-            <tr>
-                <th>Email :</th>
-                <td>' . $row['Email'] . '</td>
-            </tr>
-            <tr>
-                <th>Username :</th>
-                <td>' . $row['Username'] . '</td>
-            </tr>
-            <tr>
-                <th>Agent ID :</th>
-                <td>' . $row['agentID'] . '</td>
-            </tr>
-            <tr>
-                <th>Role :</th>
-                <td>' . $row['Role'] . '</td>
-            </tr>
-            <tr>
-                <th>Phone Number :</th>
-                <td>' . $row['PhoneNumber'] . '</td>
-            </tr>
-        </table>
-      </div>';
+            <div class="profile-image">
+                <img src="https://pyxis.nymag.com/v1/imgs/8a1/990/cd4d27fab205553dd1c9d5243b1fe79ffb-16-Chris-Hemsworth.rsquare.w330.jpg" alt="Profile Image" />
+            </div>
+            <div class="profile-info">
+                <p><strong>First Name:</strong> ' . $row['FirstName'] . '</p>
+                <p><strong>Last Name:</strong> ' . $row['LastName'] . '</p>
+                <p><strong>Email:</strong> ' . $row['Email'] . '</p>
+                <p><strong>Username:</strong> ' . $row['Username'] . '</p>
+                <p><strong>Agent ID:</strong> ' . $row['agentID'] . '</p>
+                <p><strong>Role:</strong> ' . $row['Role'] . '</p>
+                <p><strong>Phone Number:</strong> ' . $row['PhoneNumber'] . '</p>
+            </div>
+        </div>';
 
     } else {
         // Handle the case where the user is not found

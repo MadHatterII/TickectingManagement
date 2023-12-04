@@ -66,22 +66,29 @@ include 'countcard.php';
     }
 
     .user-details {
-        text-align: left;
-        /* Adjust this if you want the details to be left-aligned */
-        color: #333;
-    }
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 20px;
+}
 
-    .user-details p {
-        display: list-item;
-        margin-right: 20px;
-        /* Adjust the spacing between values */
-    }
+.profile-image img {
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
+    object-fit: cover;
+    margin-right: 20px;
+}
 
-    .user-details img {
-        display: block;
-        margin: 0 auto;
-        /* Center-align the image */
-    }
+.profile-info {
+    max-width: 400px; /* Adjust the max width as needed */
+}
+
+.profile-info p {
+    margin-bottom: 10px;
+}
+
+
 
     #modal-default .modal-content:hover {
         transition: 0.6s;
@@ -225,7 +232,7 @@ include 'countcard.php';
                     $offset = ($page - 1) * $rowsPerPage;
 
                     // Fetch and display all registered accounts from the database with pagination
-                    $sql = "SELECT FirstName, LastName, Email, Username, agentID, Role, PhoneNumber FROM Useraccounts ORDER BY agentID DESC LIMIT $rowsPerPage OFFSET $offset";
+                    $sql = "SELECT FirstName, LastName, Email, Username, agentID, Role, PhoneNumber FROM Useraccounts where Role = 'Ticketing Agent' ORDER BY agentID DESC LIMIT $rowsPerPage OFFSET $offset";
                     $result = mysqli_query($conn, $sql);
 
                     // Check if the query was successful
@@ -262,19 +269,23 @@ include 'countcard.php';
                                         <th style="width: 1%">
                                             #
                                         </th>
-                                        <th style="width: 20%">
+                                        <th style="width: 10%">
                                             Full Name
                                         </th>
-                                        <th style="width: 20%">
+                                        <th style="width: 10%">
                                             Username
                                         </th>
-                                        <th style="width: 20%">
+                                        <th style="width: 10%">
                                             Email
                                         </th>
-                                        <th style="width: 15%" class="text-center">
+                                        <th style="width: 10%" >
                                             Phone Number
                                         </th>
-                                        <th style="width: 20%">
+                                        <th style="width: 9%" >
+                                            Role
+                                        </th>
+                                        <th style="width: 15%">
+                                        Action
                                         </th>
                                     </tr>
                                 </thead>
@@ -290,6 +301,7 @@ include 'countcard.php';
                                         echo "<td>" . $row['Username'] . "</td>";
                                         echo "<td>" . $row['Email'] . "</td>";
                                         echo "<td>" . $row['PhoneNumber'] . "</td>";
+                                        echo "<td>" . $row['Role'] . "</td>";
 
                                         // Pass user details as data attributes
                                         echo '<td class="project-actions text-right">
@@ -571,6 +583,7 @@ include 'countcard.php';
                 </div>
                 <div class="modal-body" id="viewModalBody">
                     <!-- AJAX content will be loaded here -->
+                  
                 </div>
                 <div class="modal-footer justify-content-between">
                     <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
@@ -584,114 +597,150 @@ include 'countcard.php';
 
     <!-- Your HTML form goes here -->
 
-    <!-- Include jQuery library -->
-    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+<!-- Include jQuery library -->
+<script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
 
+<!-- Your HTML code remains the same -->
 
+<script>
+$(document).ready(function() {
+    // Set the agentID when the Edit button is clicked
+    $('.UpdateBtn').click(function() {
+        var agentID = $(this).data('agentid');
+        console.log('Agent ID:', agentID);
 
-    <!-- Your HTML code remains the same -->
+        // Set the text of the displayAgentID element
+        $('#displayAgentID').text('Agent ID: ' + agentID);
 
-    <script>
-        $(document).ready(function() {
-            // Set the agentID when the Edit button is clicked
-            $('.UpdateBtn').click(function() {
-                var agentID = $(this).data('agentid');
-                console.log('Agent ID:', agentID);
+        // Set the agentID in the hidden input
+        $('#editAgentID').val(agentID);
 
-                // Set the text of the displayAgentID element
-                $('#displayAgentID').text('Agent ID: ' + agentID);
+        // Make an AJAX request to fetch data for the specified agentID
+        $.ajax({
+            type: 'POST',
+            url: '../adminprocess/get_user_edit.php', // Update with the correct path
+            data: {
+                agentID: agentID
+            },
+            success: function(response) {
+                console.log('Response:', response);
 
-                // Set the agentID in the hidden input
-                $('#editAgentID').val(agentID);
+                try {
+                    // Attempt to parse the response as JSON
+                    var userData = JSON.parse(response);
 
-                // Make an AJAX request to fetch data for the specified agentID
-                $.ajax({
-                    type: 'POST',
-                    url: '../adminprocess/get_user_edit.php', // Update with the correct path
-                    data: {
-                        agentID: agentID
-                    },
-                    success: function(response) {
-                        console.log('Response:', response);
+                    // Check if userData is not null and contains the expected properties
+                    if (userData && userData.FirstName !== undefined && userData.LastName !== undefined) {
+                        // Populate the form fields with the retrieved data
+                        $('#firstName').val(userData.FirstName);
+                        $('#lastName').val(userData.LastName);
+                        $('#phoneNumber').val(userData.PhoneNumber);
+                        $('#birthdate').val(userData.Birthdate);
+                        $('#address').val(userData.Address);
+                        $('#email').val(userData.Email);
+                        $('#username').val(userData.Username);
+                        $('#password').val(userData.Password); // Assuming password is included in the JSON
 
-                        try {
-                            // Attempt to parse the response as JSON
-                            var userData = JSON.parse(response);
-
-                            // Check if userData is not null and contains the expected properties
-                            if (userData && userData.FirstName !== undefined && userData.LastName !== undefined) {
-                                // Populate the form fields with the retrieved data
-                                $('#firstName').val(userData.FirstName);
-                                $('#lastName').val(userData.LastName);
-                                $('#phoneNumber').val(userData.PhoneNumber);
-                                $('#birthdate').val(userData.Birthdate);
-                                $('#address').val(userData.Address);
-                                $('#email').val(userData.Email);
-                                $('#username').val(userData.Username);
-                                $('#password').val(userData.Password); // Assuming password is included in the JSON
-
-                                // Open the modal
-                                $('#modal-xl').modal('show');
-                            } else {
-                                console.error('Invalid user data format:', userData);
-                                // Add additional error handling if needed
-                            }
-                        } catch (error) {
-                            console.error('Error parsing JSON:', error);
-                            // Add additional error handling if needed
-                        }
-                    },
-                    error: function(error) {
-                        console.log('Error fetching user data:', error);
+                        // Open the modal
+                        $('#modal-xl').modal('show');
+                    } else {
+                        console.error('Invalid user data format:', userData);
+                        // Add additional error handling if needed
                     }
-                });
-            });
-
-            // Handle the Update button click using AJAX
-            $('#updateBtn').click(function() {
-                $.ajax({
-                    type: 'POST',
-                    url: $('#editform').attr('action'),
-                    data: $('#editform').serialize(), // Serialize the form data
-                    success: function(response) {
-                        if (response === "success") {
-                            // Update the UI or provide feedback to the user
-                            console.log("User updated successfully!");
-                        } else {
-                            console.error("Error updating user:", response);
-                        }
-
-                        // Optionally, close the modal
-                        $('#modal-xl').modal('hide');
-                        location.reload(true);
-                    },
-                    error: function(error) {
-                        console.log('Error:', error);
-                    }
-                });
-            });
+                } catch (error) {
+                    console.error('Error parsing JSON:', error);
+                    // Add additional error handling if needed
+                }
+            },
+            error: function(error) {
+                console.log('Error fetching user data:', error);
+            }
         });
+    });
 
+    $('#updateBtn').click(function() {
+        console.log('Update button clicked');
+        $.ajax({
+            type: 'POST',
+            url: $('#editform').attr('action'),
+            data: $('#editform').serialize(), // Serialize the form data
+            success: function(response) {
+                console.log('Ajax request success. Response:', response);
+                if (response === "success") {
+                    // Add success alert to the page
+                    console.log('Updating success alert');
+                    var successAlert = `
+                        <div class="alert alert-success alert-dismissible">
+                            <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+                            <h5><i class="icon fas fa-check"></i> Alert!</h5>
+                            User updated successfully.
+                        </div>
+                    `;
+                    console.log('Alert Container:', $('#alertContainer'));
+                    $('#alertContainer').html(successAlert).show(); // Show the alert container
 
+                    console.log("User updated successfully!");
+                } else {
+                    // Add error alert to the page
+                    console.log('Updating error alert');
+                    var errorAlert = `
+                        <div class="alert alert-danger alert-dismissible">
+                            <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+                            <h5><i class="icon fas fa-exclamation-triangle"></i> Alert!</h5>
+                            Error updating user: ${response}
+                        </div>
+                    `;
+                    console.log('Alert Container:', $('#alertContainer'));
+                    $('#alertContainer').html(errorAlert).show(); // Show the alert container
 
-        $(document).ready(function() {
-            // AJAX function to fetch user details and update modal content
-            $('.viewBtn').click(function() {
-                var agentID = $(this).data('agentid');
+                    console.error("Error updating user:", response);
+                }
 
-                $.ajax({
-                    type: 'POST',
-                    url: '../adminprocess/get_user_details.php', // Create a new PHP file for this purpose
-                    data: {
-                        agentID: agentID
-                    },
-                    success: function(data) {
-                        $('#viewModalBody').html(data);
-                    }
-                });
-            });
+                // Optionally, close the modal
+                $('#modal-xl').modal('hide');
+                // location.reload(true); // Commented out for debugging
+            },
+            error: function(error) {
+                console.log('Ajax request error. Error:', error);
+            }
         });
-    </script>
+    });
+});
+
+// Function to open the modal and load user details
+function openUserModal(agentID) {
+  // Make an AJAX request to get_user_details.php
+  $.ajax({
+    type: "POST",
+    url: "../adminprocess/get_user_details.php",
+    data: { agentID: agentID }, // Pass the agentID to get_user_details.php
+    success: function (data) {
+      // Update the modal body with the received data
+      $("#viewModalBody").html(data);
+
+      // Show the modal
+      $("#modal-default").modal("show");
+    },
+    error: function (error) {
+      console.error("Error fetching user details:", error);
+      // Handle error if needed
+    }
+  });
+}
+
+// Handle click event on the "View" button
+$(document).on("click", ".viewBtn", function (event) {
+  event.preventDefault();
+
+  // Get the agentID from the data attribute
+  var agentID = $(this).data("agentid");
+
+  // Open the modal and load user details
+  openUserModal(agentID);
+});
+
+</script>
+
 
 
 
@@ -717,9 +766,7 @@ include 'countcard.php';
     <script src="../plugins/chart.js/Chart.min.js"></script>
     <!-- Sparkline -->
     <script src="../plugins/sparklines/sparkline.js"></script>
-    <!-- JQVMap -->
-    <script src="../plugins/jqvmap/jquery.vmap.min.js"></script>
-    <script src="../plugins/jqvmap/maps/jquery.vmap.usa.js"></script>
+    
     <!-- jQuery Knob Chart -->
     <script src="../plugins/jquery-knob/jquery.knob.min.js"></script>
     <!-- daterangepicker -->
@@ -727,8 +774,7 @@ include 'countcard.php';
     <script src="../plugins/daterangepicker/daterangepicker.js"></script>
     <!-- Tempusdominus Bootstrap 4 -->
     <script src="../plugins/tempusdominus-bootstrap-4/js/tempusdominus-bootstrap-4.min.js"></script>
-    <!-- Summernote -->
-    <script src="../plugins/summernote/summernote-bs4.min.js"></script>
+   
     <!-- overlayScrollbars -->
     <script src="../plugins/overlayScrollbars/js/jquery.overlayScrollbars.min.js"></script>
     <!-- AdminLTE App -->
