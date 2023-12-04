@@ -52,6 +52,18 @@
                                             <p>Price Management</p>
                                         </a>
                                     </li>
+                                    <li class="nav-item">
+                                        <a href="customerside.php" class="nav-link" >
+                                            <i class="fas fa-money-bill nav-icon"></i>
+                                            <p>customerside</p>
+                                        </a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a href="adminviewactlog.php" class="nav-link" >
+                                            <i class="fas fa-address-book nav-icon"></i>
+                                            <p>User Activity Logs</p>
+                                        </a>
+                                    </li>
 
                                 </ul>
                             </li>
