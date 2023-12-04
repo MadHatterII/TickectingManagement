@@ -4,8 +4,8 @@
 session_start();
 
 // Check if the user is already logged in and redirect them if they are
-if (isset($_SESSION["user_id"])) {
-    header("Location: welcome.php");
+if (isset($_SESSION["agentID"])) {
+    header("Location: ./user/userdash.php");
     exit;
 }
 
@@ -23,17 +23,17 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
     if ($_POST["login_type"] == "ticketing_agent") {
         // Query the database for Ticketing Agents
-        $query = "SELECT * FROM users WHERE email = '$email' AND password = '$password'";
+        $query = "SELECT * FROM useraccounts WHERE Username = '$email' AND password = '$password' AND Role = 'Ticketing Agent'";
     } elseif ($_POST["login_type"] == "admin") {
         // Query the database for Admins
-        $query = "SELECT * FROM admin WHERE email = '$email' AND password = '$password'";
+        $query = "SELECT * FROM useraccounts WHERE Username = '$email' AND password = '$password' AND Role = 'admin'";
     }
 
     $result = mysqli_query($db_connection, $query);
 
     if (mysqli_num_rows($result) == 1) {
         // User exists, log them in and redirect to a welcome page
-        $_SESSION["user_id"] = $user_id; // Store user information in the session
+        $_SESSION["agentID"] = $agentID; // Store user information in the session
         header("Location: index.php");
         exit;
     } else {

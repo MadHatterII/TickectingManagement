@@ -7,7 +7,7 @@ if (isset($_GET['boatName'])) {
     $boatName = $_GET['boatName'];
 
     // Use a prepared statement to prevent SQL injection
-    $stmt = $conn->prepare("SELECT group_name FROM bookings WHERE boat = ? ORDER BY group_name DESC");
+    $stmt = $conn->prepare("SELECT group_name FROM bookings WHERE boat = ? ORDER BY group_name ");
     $stmt->bind_param("s", $boatName);
 
     // Execute the prepared statement

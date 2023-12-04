@@ -3,7 +3,8 @@
 include('../connection/connection.php');
 
 // Function to display a row in the table
-function displayTableRow($counter, $cottageType, $stayType, $groupName, $status, $id) {
+function displayTableRow($counter, $cottageType, $stayType, $groupName, $status, $id)
+{
     echo "<tr>";
     echo "<td>$counter</td>";
     echo "<td>$cottageType</td>";
@@ -15,7 +16,8 @@ function displayTableRow($counter, $cottageType, $stayType, $groupName, $status,
 }
 
 // Function to display the cottage table structure
-function displayCottageTable($conn, $cottageType) {
+function displayCottageTable($conn, $cottageType)
+{
     $sql = "SELECT DISTINCT stayType, group_name FROM bookings WHERE cottage_type = '$cottageType'";
     $result = $conn->query($sql);
 
@@ -64,11 +66,14 @@ if (isset($_GET['q'])) {
                         <th>Action</th>
                         </tr>
                     </thead>';
+            $counter = 1; // Initialize the counter
 
             while ($row = $result->fetch_assoc()) {
-                displayTableRow($row['id'], $row['cottage_type'], $row['stayType'], $row['group_name'], $row['status'], $row['id']);
+                displayTableRow($counter, $row['cottage_type'], $row['stayType'], $row['group_name'], $row['status'], $row['id']);
+                $counter++; // Increment the counter for each row
             }
-            
+
+
             echo '</table>';
         } else {
             echo '
@@ -109,7 +114,7 @@ if (isset($_GET['q'])) {
             $cottageType = $cottageTypeRow["cottage_type"];
             displayCottageTable($conn, $cottageType);
         }
-        
+
         echo '</table>';
     } else {
         echo '<p>No distinct cottage types found.</p>';
@@ -118,4 +123,3 @@ if (isset($_GET['q'])) {
 
 // Close connection
 $conn->close();
-?>

@@ -4,7 +4,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Admin | Dashboard</title>
+    <title>Ticket | Details</title>
 
 
     <!-- Font Awesome -->
@@ -37,32 +37,44 @@
 
         <!-- Preloader -->
         <div class="preloader flex-column justify-content-center align-items-center">
-                <img class="animation__shake" src="../dist/img/AdminLTELogo.png" alt="AdminLTELogo" height="60" width="60">
-            </div>
+            <img class="animation__shake" src="../dist/img/AdminLTELogo.png" alt="AdminLTELogo" height="60" width="60">
+        </div>
 
         <?php include '../userside/nav.php'; ?>
 
         <!-- Main Sidebar Container -->
-    <!-- Main Sidebar Container -->
-    <aside class="main-sidebar sidebar-dark-primary elevation-4">
+        <!-- Main Sidebar Container -->
+        <aside class="main-sidebar sidebar-dark-primary elevation-4">
             <!-- Brand Logo -->
             <a href="adminhome.php" class="brand-link">
                 <img src="../img/slsulogo.png" alt="AdminLTE Logo" class="brand-image img-circle elevation-3" style="opacity: 1">
                 <span class="brand-text font-weight-light">WanderLust</span>
             </a>
 
-            <!-- Sidebar -->
-            <div class="sidebar">
+             <!-- Sidebar -->
+             <div class="sidebar">
                 <!-- Sidebar user panel (optional) -->
                 <div class="user-panel mt-3 pb-3 mb-3 d-flex">
                     <div class="image">
                         <img src="../img/canigs.png" class="img-circle elevation-2" alt="User Image">
                     </div>
-                    <div class="info">
-                        <a href="#" class="d-block">Alexander Pierce</a>
-                    </div>
-                </div>
+                    <?php
+                        // Start or resume the session
+                
 
+                        // Check if agentID and Username are set in the session
+                        if (isset($_SESSION['agentID']) && isset($_SESSION['username'])&& isset($_SESSION['lastname'])) {
+                            // Display the user's name (agentID) and username from the session
+                            echo '<div class="info">
+                            <a href="#" class="d-block">'. $_SESSION['username'] .' '. $_SESSION['lastname'] . '</a>
+                            </div>';
+                        } else {
+                            // Default text if agentID or Username is not set
+                            echo '<a href="#" class="d-block">Guest</a>';
+                        }
+                        ?>
+                    
+                </div>
 
 
                 <!-- Sidebar Menu -->
@@ -86,20 +98,20 @@
                                     </a>
                                 </li>
                                 <li class="nav-item">
-                                        <a href="userticket.php" class="nav-link" >
-                                            <i class="far fa-user nav-icon"></i>
-                                            <p>Ticket Form</p>
-                                        </a>
-                                    </li>
-                                    <li class="nav-item">
-                                        <a href="viewticket.php" class="nav-link" >
-                                            <i class="far fa-user nav-icon"></i>
-                                            <p>View Ticket</p>
-                                        </a>
-                                    </li>
-                                    
-                                </ul>
-                            </li>
+                                    <a href="userticket.php" class="nav-link">
+                                        <i class="far fa-user nav-icon"></i>
+                                        <p>Ticket Form</p>
+                                    </a>
+                                </li>
+                                <li class="nav-item">
+                                    <a href="viewticket.php" class="nav-link active">
+                                        <i class="far fa-user nav-icon"></i>
+                                        <p>View Ticket</p>
+                                    </a>
+                                </li>
+
+                            </ul>
+                        </li>
 
                         <li class="nav-item">
                             <a href="#" class="nav-link">
@@ -124,21 +136,22 @@
                                 </li>
                             </ul>
                         </li>
-                        <li class="nav-header">MISCELLANEOUS</li>
+                        <li class="nav-header">Others</li>
 
 
 
                         <li class="nav-item">
-                            <a href="#" class="nav-link">
+                            <a href="userprofile.php" class="nav-link">
                                 <i class="nav-icon fas fa-chart-line text-info"></i>
-                                <p>Report</p>
+                                <p>Profile</p>
                             </a>
                         </li>
 
 
 
+
                         <li class="nav-item">
-                            <a href="/logout" class="nav-link">
+                            <a href="../logout.php" class="nav-link">
                                 <i class="nav-icon far fa-circle text-danger"></i>
                                 <p>Logout</p>
                             </a>
@@ -186,7 +199,37 @@
                     </div>
                     <!-- ./card-header -->
                     <div class="card-body">
-                        <table class="table table-bordered table-hover">
+                        <?php
+                        include '../connection/connection.php';
+
+                        // Set the number of rows per page
+                        $rowsPerPage = 5;
+
+                        // Check the current page number
+                        if (isset($_GET['page']) && is_numeric($_GET['page'])) {
+                            $currentPage = (int)$_GET['page'];
+                        } else {
+                            $currentPage = 1;
+                        }
+
+                        // Calculate the offset for the SQL query
+                        $offset = ($currentPage - 1) * $rowsPerPage;
+
+                        // Fetch total number of rows
+                        $sqlTotalRows = "SELECT COUNT(*) AS total FROM ticket";
+                        $resultTotalRows = $conn->query($sqlTotalRows);
+                        $rowTotalRows = $resultTotalRows->fetch_assoc();
+                        $totalRows = $rowTotalRows['total'];
+
+                        // Calculate the total number of pages
+                        $totalPages = ceil($totalRows / $rowsPerPage);
+
+                        // Fetch data with pagination
+                        $sql = "SELECT * FROM ticket ORDER BY id DESC LIMIT $offset, $rowsPerPage";
+                        $result = $conn->query($sql);
+
+                        // Display table
+                        echo "<table class='table table-bordered table-hover'>
                             <thead>
                                 <tr>
                                     <th>#</th>
@@ -194,32 +237,51 @@
                                     <th>Entrance Fee</th>
                                     <th>Cottage Fee</th>
                                     <th>Total Amount</th>
+                                    <th>Action</th>
                                 </tr>
                             </thead>
-                            <tbody>
-                            <?php
-                            include '../connection/connection.php';
-                            $sql = "SELECT * FROM ticket";
-                            $result = $conn->query($sql);
+                            <tbody>";
 
-                            if ($result->num_rows > 0) {
-                                while ($row = $result->fetch_assoc()) {
-                                    echo "<tr>";
-                                    echo "<td>" . $row["id"] . "</td>";
-                                    echo "<td>" . $row["groupName"] . "</td>";
-                                    echo "<td>₱" . $row["entryFee"] . "</td>";
-                                    echo "<td>₱" . $row["cottageFee"] . "</td>";
-                                    echo "<td>₱" . $row["totalAmount"] . "</td>";
-                                    echo "<td>"."</td>";
-                                    echo "</tr>";
-                                                            }
-                            } else {
-                                echo "<tr><td colspan='3'>No data available</td></tr>";
+                        if ($result->num_rows > 0) {
+                            while ($row = $result->fetch_assoc()) {
+                                echo "<tr>";
+                                echo "<td>" . $row["id"] . "</td>";
+                                echo "<td>" . $row["groupName"] . "</td>";
+                                echo "<td>₱" . $row["entryFee"] . "</td>";
+                                echo "<td>₱" . $row["cottageFee"] . "</td>";
+                                echo "<td>₱" . $row["totalAmount"] . "</td>";
+                                echo "</tr>";
                             }
-                            
-                            ?>   
-                            </tbody>
-                        </table>
+                        } else {
+                            echo "<tr><td colspan='5'>No data available</td></tr>";
+                        }
+
+                        echo "</tbody></table>";
+
+                        // Display pagination
+                        echo "<div class='card-footer clearfix'>
+        <ul class='pagination pagination-sm m-0 float-right'>";
+
+                        // Display "Previous" link if not on the first page
+                        if ($currentPage > 1) {
+                            echo "<li class='page-item'><a class='page-link' href='?page=" . ($currentPage - 1) . "'>&laquo;</a></li>";
+                        }
+
+                        // Display page numbers
+                        for ($i = 1; $i <= $totalPages; $i++) {
+                            echo "<li class='page-item " . ($i == $currentPage ? 'active' : '') . "'><a class='page-link' href='?page=$i'>$i</a></li>";
+                        }
+
+                        // Display "Next" link if not on the last page
+                        if ($currentPage < $totalPages) {
+                            echo "<li class='page-item'><a class='page-link' href='?page=" . ($currentPage + 1) . "'>&raquo;</a></li>";
+                        }
+
+                        echo "</ul></div>";
+
+                        $conn->close();
+                        ?>
+
                     </div>
                 </div>
 
@@ -237,7 +299,7 @@
     <?php include '../footer.php' ?>
 
 
-    
+
     <!-- ./wrapper -->
 
 

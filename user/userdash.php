@@ -1,6 +1,15 @@
 <?php
-    include '../connection/connection.php';
 
+// You should also include the session start if it's not already done
+session_start();
+
+// Check if the user is logged in (agentID is set in the session)
+if (!isset($_SESSION['agentID'])) {
+    // Redirect to login page or handle not logged in user
+    header("Location: index.php");
+    exit();
+}
+    include '../connection/connection.php';
 
     //tourist count
 
@@ -70,7 +79,7 @@
     <head>
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
-        <title>Admin | Dashboard</title>
+        <title>User | Dashboard</title>
 
 
         <!-- Font Awesome -->
@@ -124,9 +133,22 @@
                     <div class="image">
                         <img src="../img/canigs.png" class="img-circle elevation-2" alt="User Image">
                     </div>
-                    <div class="info">
-                        <a href="#" class="d-block">Alexander Pierce</a>
-                    </div>
+                    <?php
+                        // Start or resume the session
+                
+
+                        // Check if agentID and Username are set in the session
+                        if (isset($_SESSION['agentID']) && isset($_SESSION['username'])&& isset($_SESSION['lastname'])) {
+                            // Display the user's name (agentID) and username from the session
+                            echo '<div class="info">
+                            <a href="#" class="d-block">'. $_SESSION['username'] .' '. $_SESSION['lastname'] . '</a>
+                            </div>';
+                        } else {
+                            // Default text if agentID or Username is not set
+                            echo '<a href="#" class="d-block">Guest</a>';
+                        }
+                        ?>
+                    
                 </div>
 
 
@@ -161,7 +183,7 @@
                                 </ul>
                             </li>
 
-                        <li class="nav-item">
+                        <li class="nav-item menu-open">
                             <a href="#" class="nav-link">
                                 <i class="far fa-check-circle nav-icon"></i>
                                 <p>
@@ -184,25 +206,27 @@
                                 </li>
                             </ul>
                         </li>
-                        <li class="nav-header">MISCELLANEOUS</li>
+                        <li class="nav-header">Others</li>
 
 
 
                         <li class="nav-item">
-                            <a href="#" class="nav-link">
+                            <a href="userprofile.php" class="nav-link">
                                 <i class="nav-icon fas fa-chart-line text-info"></i>
-                                <p>Report</p>
+                                <p>Profile</p>
                             </a>
                         </li>
 
 
 
+                      
                         <li class="nav-item">
-                            <a href="/logout" class="nav-link">
-                                <i class="nav-icon far fa-circle text-danger"></i>
-                                <p>Logout</p>
-                            </a>
-                        </li>
+                                <a href="../logout.php" class="nav-link">
+                                    <i class="nav-icon far fa-circle text-danger"></i>
+                                    <p>Logout</p>
+                                </a>
+                            </li>
+
 
 
                     </ul>
@@ -229,8 +253,7 @@
                             </div><!-- /.col -->
                             <div class="col-sm-6">
                                 <ol class="breadcrumb float-sm-right">
-                                    <li class="breadcrumb-item"><a href="#">Home</a></li>
-                                    <li class="breadcrumb-item active">Dashboard v1</li>
+                                    
                                 </ol>
                             </div><!-- /.col -->
                         </div><!-- /.row -->
@@ -270,7 +293,7 @@
                                     <div class="icon">
                                         <i class="fas fa-ship"></i>
                                     </div>
-                                    <a href="#" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
+                                    <a href="userboat.php" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
                                 </div>
 
                             </div>
@@ -285,7 +308,7 @@
                                     <div class="icon">
                                         <i class="fas fa-home"></i>
                                     </div>
-                                    <a href="#" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
+                                    <a href="usercottage.php" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
                                 </div>
 
                             </div>

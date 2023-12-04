@@ -42,7 +42,7 @@ function insertMembers(){
         // If no exceptions were thrown, commit the transaction
         $conn->commit();
         
-        $user_id = $_SESSION["user_id"];
+        $user_id = $_SESSION["agentID"];
         $user_description = "Created a Ticket";
         $timestamp = date("Y-m-d H:i:s");
     

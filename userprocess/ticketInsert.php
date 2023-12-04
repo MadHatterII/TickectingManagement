@@ -12,6 +12,9 @@ if (isset($_POST['submit'])) {
     $stayType = $_POST['stayType'];
     $address = $_POST['address'];
     $checkIn = $_POST['checkinTime'];
+    $date = $_POST['date'];
+    $boat = $_POST['boat'];
+
 
     // Check if the group name already exists in the database
     $checkGroupNameSql = "SELECT COUNT(*) FROM bookings WHERE group_name = '$groupName'";
@@ -27,8 +30,8 @@ if (isset($_POST['submit'])) {
     }
 
     // If the group name does not exist, insert the data into the database
-    $sql = "INSERT INTO bookings (ticket_type, group_name, cottage_type, checkinTime, checkoutTime, contact_number, address, stayType) 
-            VALUES ('$ticketType', '$groupName', '$cottageType','$checkIn', '$timeSchedule', '$contactNumber', '$address', '$stayType')";
+    $sql = "INSERT INTO bookings (ticket_type, group_name, cottage_type, checkinTime, checkoutTime, contact_number, address, stayType, date,boat) 
+            VALUES ('$ticketType', '$groupName', '$cottageType','$checkIn', '$timeSchedule', '$contactNumber', '$address', '$stayType','$date','$boat')";
 
     // Execute the query and store the result
     $result = $conn->query($sql);

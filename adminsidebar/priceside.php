@@ -98,12 +98,14 @@
 
 
 
+                            
                             <li class="nav-item">
-                                <a href="/logout" class="nav-link">
+                                <a href="../logout.php" class="nav-link">
                                     <i class="nav-icon far fa-circle text-danger"></i>
                                     <p>Logout</p>
                                 </a>
                             </li>
+
 
 
                         </ul>

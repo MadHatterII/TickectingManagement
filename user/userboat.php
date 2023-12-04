@@ -1,19 +1,82 @@
-
 <?php
-include '../connection/connection.php';
 
-// Fetch boat data from the database
-$sql = "SELECT DISTINCT boat FROM bookings";
-$result = $conn->query($sql);
+// You should also include the session start if it's not already done
+session_start();
 
-?>
+// Check if the user is logged in (agentID is set in the session)
+if (!isset($_SESSION['agentID'])) {
+    // Redirect to login page or handle not logged in user
+    header("Location: index.php");
+    exit();
+}
+    include '../connection/connection.php';
+
+    //tourist count
+
+    $sql = "SELECT * FROM members";
+
+    // Execute the query and store the result in a variable
+    $result = mysqli_query($conn, $sql);
+
+    // Check if the query was successful
+    if (!$result) {
+        die("Error: " . mysqli_error($conn));
+    }
+
+
+    $activeTouristCount = mysqli_num_rows($result);
+
+
+    // cottage query
+    $totalCottages = 20;
+    $sql1 = "SELECT COUNT(cottage_type) as cottage FROM bookings WHERE status = 'IN'";
+
+    // Execute the query and store the result in a variable
+    $result1 = mysqli_query($conn, $sql1);
+    $row = mysqli_fetch_assoc($result1);
+    $bookedCottages = $row['cottage'];
+
+
+
+    $activeAvailableCottagesCount = $totalCottages - $bookedCottages;
+
+    //boat count
+    $sql2 = "SELECT * FROM boats";
+
+    // Execute the query and store the result in a variable
+    $result2 = mysqli_query($conn, $sql2);
+
+    // Check if the query was successful
+    if (!$result2) {
+        die("Error: " . mysqli_error($conn));
+    }
+
+
+    $activeBoatsCount = mysqli_num_rows($result2);
+
+
+    //ticketing agent count
+    $sql3 = "SELECT * FROM Useraccounts";
+
+    // Execute the query and store the result in a variable
+    $result3 = mysqli_query($conn, $sql3);
+
+    // Check if the query was successful
+    if (!$result3) {
+        die("Error: " . mysqli_error($conn));
+    }
+
+    // Count the active Ticketing Agents
+    $activeTicketingAgentsCount = mysqli_num_rows($result3);
+    ?>
+
 <!DOCTYPE html>
 <html lang="en">
 
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Admin | Dashboard</title>
+    <title>User | Boat</title>
 
 
     <!-- Font Awesome -->
@@ -39,6 +102,11 @@ $result = $conn->query($sql);
         background: rgb(13, 126, 194);
         background: linear-gradient(0deg, rgba(13, 126, 194, .453321321) 58%, rgba(208, 170, 89, 0.8548669467787114) 77%);
     }
+    th {
+        background-color: #3ea175;
+        /* Header background color */
+        color: #fff;
+    }
 </style>
 
 <body class="hold-transition sidebar-mini layout-fixed">
@@ -46,30 +114,43 @@ $result = $conn->query($sql);
 
         <!-- Preloader -->
         <div class="preloader flex-column justify-content-center align-items-center">
-                <img class="animation__shake" src="../dist/img/AdminLTELogo.png" alt="AdminLTELogo" height="60" width="60">
-            </div>
+            <img class="animation__shake" src="../dist/img/AdminLTELogo.png" alt="AdminLTELogo" height="60" width="60">
+        </div>
 
         <?php include '../userside/nav.php'; ?>
 
         <!-- Main Sidebar Container -->
-    <!-- Main Sidebar Container -->
-    <aside class="main-sidebar sidebar-dark-primary elevation-4">
+        <!-- Main Sidebar Container -->
+        <aside class="main-sidebar sidebar-dark-primary elevation-4">
             <!-- Brand Logo -->
             <a href="adminhome.php" class="brand-link">
                 <img src="../img/slsulogo.png" alt="AdminLTE Logo" class="brand-image img-circle elevation-3" style="opacity: 1">
                 <span class="brand-text font-weight-light">WanderLust</span>
             </a>
 
-            <!-- Sidebar -->
-            <div class="sidebar">
+           <!-- Sidebar -->
+           <div class="sidebar">
                 <!-- Sidebar user panel (optional) -->
                 <div class="user-panel mt-3 pb-3 mb-3 d-flex">
                     <div class="image">
                         <img src="../img/canigs.png" class="img-circle elevation-2" alt="User Image">
                     </div>
-                    <div class="info">
-                        <a href="#" class="d-block">Alexander Pierce</a>
-                    </div>
+                    <?php
+                        // Start or resume the session
+                
+
+                        // Check if agentID and Username are set in the session
+                        if (isset($_SESSION['agentID']) && isset($_SESSION['username'])&& isset($_SESSION['lastname'])) {
+                            // Display the user's name (agentID) and username from the session
+                            echo '<div class="info">
+                            <a href="#" class="d-block">'. $_SESSION['username'] .' '. $_SESSION['lastname'] . '</a>
+                            </div>';
+                        } else {
+                            // Default text if agentID or Username is not set
+                            echo '<a href="#" class="d-block">Guest</a>';
+                        }
+                        ?>
+                    
                 </div>
 
 
@@ -95,16 +176,16 @@ $result = $conn->query($sql);
                                     </a>
                                 </li>
                                 <li class="nav-item">
-                                        <a href="userticket.php" class="nav-link" >
-                                            <i class="far fa-user nav-icon"></i>
-                                            <p>Ticket Form</p>
-                                        </a>
-                                    </li>
-                                    
-                                </ul>
-                            </li>
+                                    <a href="userticket.php" class="nav-link">
+                                        <i class="far fa-user nav-icon"></i>
+                                        <p>Ticket Form</p>
+                                    </a>
+                                </li>
 
-                        <li class="nav-item">
+                            </ul>
+                        </li>
+
+                        <li class="nav-item menu-open">
                             <a href="#" class="nav-link">
                                 <i class="far fa-check-circle nav-icon"></i>
                                 <p>
@@ -127,21 +208,21 @@ $result = $conn->query($sql);
                                 </li>
                             </ul>
                         </li>
-                        <li class="nav-header">MISCELLANEOUS</li>
+                        <li class="nav-header">Others</li>
 
 
 
                         <li class="nav-item">
-                            <a href="#" class="nav-link">
+                            <a href="userprofile.php" class="nav-link">
                                 <i class="nav-icon fas fa-chart-line text-info"></i>
-                                <p>Report</p>
+                                <p>Profile</p>
                             </a>
                         </li>
 
 
 
                         <li class="nav-item">
-                            <a href="/logout" class="nav-link">
+                            <a href="../logout.php" class="nav-link">
                                 <i class="nav-icon far fa-circle text-danger"></i>
                                 <p>Logout</p>
                             </a>
@@ -167,9 +248,7 @@ $result = $conn->query($sql);
             <div class="content-header">
                 <div class="container-fluid">
                     <div class="row mb-2">
-                        <div class="col-sm-6">
-                            <h1 class="m-0">Dashboard</h1>
-                        </div><!-- /.col -->
+
                         <div class="col-sm-6">
                             <ol class="breadcrumb float-sm-right">
 
@@ -182,30 +261,113 @@ $result = $conn->query($sql);
 
             <!-- Main content -->
             <section class="content">
+            <div class="container-fluid">
+                        <!-- Small boxes (Stat box) -->
+                        <div class="row">
+                            <div class="col-lg-3 col-6">
+                                <!-- small box -->
+                                <div class="small-box bg-info">
+                                    <div class="inner">
+                                        <h3><?php echo $activeTouristCount; ?></h3>
+                                        <p>Tourist</p>
+                                    </div>
+                                    <div class="icon">
+                                        <i class="fas fa-user"></i>
+                                    </div>
+                                    <a href="#" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
+                                </div>
 
-                <div class="card">
-                    <div class="card-header">
-                        <h3 class="card-title">Expandable Table</h3>
-                    </div>
-                    <!-- ./card-header -->
-                    <div class="card-body">
-                        <table class="table table-bordered table-hover">
-                            <thead>
-                                <tr>
-                                    <th>#</th>
-                                    <th>Boat Name</th>
-                                    <th>Action</th>
-                                </tr>
-                            </thead>
-                            <tbody>
+                            </div>
+                            <!-- ./col -->
+                            <div class="col-lg-3 col-6">
+                                <!-- small box -->
+                                <div class="small-box bg-success">
+                                    <div class="inner">
+                                        <h3><?php echo $activeBoatsCount; ?></h3>
+                                        <p>Active Boat</p>
+                                    </div>
+                                    <div class="icon">
+                                        <i class="fas fa-ship"></i>
+                                    </div>
+                                    <a href="userboat.php" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
+                                </div>
+
+                            </div>
+                            <!-- ./col -->
+                            <div class="col-lg-3 col-6">
+                                <!-- small box -->
+                                <div class="small-box bg-warning">
+                                    <div class="inner">
+                                        <h3><?php echo $activeAvailableCottagesCount; ?></h3>
+                                        <p>Available Cottage</p>
+                                    </div>
+                                    <div class="icon">
+                                        <i class="fas fa-home"></i>
+                                    </div>
+                                    <a href="usercottage.php" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
+                                </div>
+
+                            </div>
+                            <!-- ./col -->
+                            <div class="col-lg-3 col-6">
+                                <!-- small box -->
+                                <div class="small-box bg-danger">
+                                    <div class="inner">
+                                        <h3><?php echo $activeTicketingAgentsCount; ?></h3>
+                                        <p>Ticketing Agent</p>
+                                    </div>
+                                    <div class="icon">
+                                        <i class="fas fa-user-secret"></i>
+                                    </div>
+                                    <a href="#" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
+                                </div>
+
+                            </div>
+                            <!-- ./col -->
+                        </div>
+                        <!-- /.row -->
+
+            <div class="card">
+    <div class="card-header">
+        <h3 class="card-title">Boats Table</h3>
+    </div>
+    <!-- ./card-header -->
+    <div class="card-body">
+        <?php
+        include '../connection/connection.php';
+
+        // Fetch boat data from the database
+        $sql = "SELECT DISTINCT boat FROM bookings";
+        $result = $conn->query($sql);
+
+        $itemsPerPage = 10; // Set the number of items per page
+        $totalItems = $result->num_rows;
+        $totalPages = ceil($totalItems / $itemsPerPage);
+
+        $currentPage = isset($_GET['page']) ? $_GET['page'] : 1;
+        $offset = ($currentPage - 1) * $itemsPerPage;
+
+        $sql = "SELECT DISTINCT boat FROM bookings LIMIT $offset, $itemsPerPage";
+        $result = $conn->query($sql);
+        ?>
+
+        <div class="table-responsive">
+            <table class="table table-bordered table-hover">
+                <thead >
+                    <tr>
+                        <th>#</th>
+                        <th>Boat Name</th>
+                        <th>View Groupname</th>
+                    </tr>
+                </thead>
+                <tbody>
                     <?php
                     if ($result->num_rows > 0) {
-                        $rowNumber = 1;
+                        $rowNumber = $offset + 1;
                         while ($row = $result->fetch_assoc()) {
                             echo "<tr>";
-                            // echo "<td>" . $row["id"] . "</td>"; // Assuming 'boat_id' is the column name for the boat ID
-                            echo "<td>" . $rowNumber . "</td>"; 
-                            echo "<td>" . $row["boat"] . "</td>"; // Replace 'boat_name' with the actual column name for boat name
+                            echo "<td>" . $rowNumber . "</td>";
+                            echo "<td>" . $row["boat"] . "</td>";
                             echo "<td><button type='button' class='btn btn-primary view-details' data-toggle='modal' data-target='#myModal' data-boat-name='" . $row["boat"] . "'>View Details</button></td>";
                             echo "</tr>";
                             $rowNumber++;
@@ -217,11 +379,12 @@ $result = $conn->query($sql);
                 </tbody>
             </table>
         </div>
+        
+    
     </div>
-                <?php
-    // Close the database connection
-    $conn->close();
-    ?>
+</div>
+
+
 
 
 
@@ -237,13 +400,13 @@ $result = $conn->query($sql);
     <?php include '../footer.php' ?>
 
 
-    
+
     <!-- ./wrapper -->
 
 
 
     <div class="modal" id="myModal">
-    <div class="modal-dialog">
+    <div class="modal-dialog modal-dialog-scrollable">
         <div class="modal-content">
 
             <!-- Modal Header -->
@@ -255,11 +418,11 @@ $result = $conn->query($sql);
             <!-- Modal Body -->
             <div class="modal-body">
                 <table class="table">
-                    
                     <tbody>
                         <tr>
                             <td id="groupNameCell"></td>
                         </tr>
+                        <!-- Add more rows as needed -->
                     </tbody>
                 </table>
             </div>
@@ -273,29 +436,32 @@ $result = $conn->query($sql);
     </div>
 </div>
 
-<script>
-    document.querySelectorAll('.view-details').forEach(function (button) {
-        button.addEventListener('click', function () {
-            var boatName = this.getAttribute('data-boat-name');
 
-            $.ajax({
-                type: 'GET',
-                url: '../userprocess/get_group_name.php',
-                data: { boatName: boatName },
-                success: function (response) {
-                    // Assuming response is a single group name
-                    var groupName = response;
+    <script>
+        document.querySelectorAll('.view-details').forEach(function(button) {
+            button.addEventListener('click', function() {
+                var boatName = this.getAttribute('data-boat-name');
 
-                    // Update the group name in the modal table cell
-                    document.getElementById('groupNameCell').innerHTML = response;
-                },
-                error: function () {
-                    console.error('Error retrieving group name.');
-                }
+                $.ajax({
+                    type: 'GET',
+                    url: '../userprocess/get_group_name.php',
+                    data: {
+                        boatName: boatName
+                    },
+                    success: function(response) {
+                        // Assuming response is a single group name
+                        var groupName = response;
+
+                        // Update the group name in the modal table cell
+                        document.getElementById('groupNameCell').innerHTML = response;
+                    },
+                    error: function() {
+                        console.error('Error retrieving group name.');
+                    }
+                });
             });
         });
-    });
-</script>
+    </script>
 
 
 

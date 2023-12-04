@@ -1,7 +1,15 @@
 <?php
 // PHP code
 include('../connection/connection.php');
+// You should also include the session start if it's not already done
+session_start();
 
+// Check if the user is logged in (agentID is set in the session)
+if (!isset($_SESSION['agentID'])) {
+    // Redirect to login page or handle not logged in user
+    header("Location: index.php");
+    exit();
+}
 
 ?>
 
@@ -75,18 +83,31 @@ include('../connection/connection.php');
                 <span class="brand-text font-weight-light">WanderLust</span>
             </a>
 
-            <!-- Sidebar -->
-            <div class="sidebar">
+          <!-- Sidebar -->
+          <!-- Sidebar -->
+          <div class="sidebar">
                 <!-- Sidebar user panel (optional) -->
                 <div class="user-panel mt-3 pb-3 mb-3 d-flex">
                     <div class="image">
                         <img src="../img/canigs.png" class="img-circle elevation-2" alt="User Image">
                     </div>
-                    <div class="info">
-                        <a href="#" class="d-block">Alexander Pierce</a>
-                    </div>
-                </div>
+                    <?php
+                        // Start or resume the session
+                
 
+                        // Check if agentID and Username are set in the session
+                        if (isset($_SESSION['agentID']) && isset($_SESSION['username'])&& isset($_SESSION['lastname'])) {
+                            // Display the user's name (agentID) and username from the session
+                            echo '<div class="info">
+                            <a href="#" class="d-block">'. $_SESSION['username'] .' '. $_SESSION['lastname'] . '</a>
+                            </div>';
+                        } else {
+                            // Default text if agentID or Username is not set
+                            echo '<a href="#" class="d-block">Guest</a>';
+                        }
+                        ?>
+                    
+                </div>
 
 
                 <!-- Sidebar Menu -->
@@ -94,7 +115,7 @@ include('../connection/connection.php');
                     <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
                         <!-- Add icons to the links using the .nav-icon class
                with font-awesome or any other icon font library -->
-                        <li class="nav-item ">
+                        <li class="nav-item menu-open">
                             <a href="#" class="nav-link">
                                 <i class="nav-icon fas fa-tachometer-alt"></i>
                                 <p>
@@ -112,7 +133,7 @@ include('../connection/connection.php');
                                 <li class="nav-item">
                                     <a href="userticket.php" class="nav-link">
                                         <i class="far fa-user nav-icon"></i>
-                                        <p> Agent Management</p>
+                                        <p> Ticket Form</p>
                                     </a>
                                 </li>
                                 <!-- <li class="nav-item">
@@ -148,17 +169,16 @@ include('../connection/connection.php');
                                 </li>
                             </ul>
                         </li>
-                        <li class="nav-header">Other</li>
+                        <li class="nav-header">Others</li>
+
 
 
                         <li class="nav-item">
-                            <a href="#" class="nav-link">
+                            <a href="userprofile.php" class="nav-link">
                                 <i class="nav-icon fas fa-chart-line text-info"></i>
-                                <p>Report</p>
+                                <p>Profile</p>
                             </a>
                         </li>
-
-
 
 
                         <li class="nav-item">
@@ -229,7 +249,7 @@ include('../connection/connection.php');
                             $conn->query($updateCottageCountQuery);
 
                             // SQL query to get updated cottage information
-                            $cottageQuery = "SELECT cottage_type, cottage_count FROM cottages";
+                            $cottageQuery = "SELECT cottage_type, cottage_count FROM cottages ";
                             $cottageResult = $conn->query($cottageQuery);
 
                             // Display updated cottage information in the specified format
@@ -304,7 +324,7 @@ include('../connection/connection.php');
                                         $startIndex = ($currentPage - 1) * $recordsPerPage;
 
                                         // SQL query to retrieve limited records from the database
-                                        $sql = "SELECT id,cottage_type, stayType,group_name,status FROM bookings ORDER BY cottage_type DESC LIMIT $startIndex, $recordsPerPage";
+                                        $sql = "SELECT id,cottage_type, stayType,group_name,status FROM bookings ORDER BY cottage_type  LIMIT $startIndex, $recordsPerPage";
                                         $result = $conn->query($sql);
 
                                         // Display data in the table

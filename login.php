@@ -3,7 +3,7 @@
 session_start();
 
 // Check if the user is already logged in and redirect them if they are
-if (isset($_SESSION["user_id"])) {
+if (isset($_SESSION["agentID"])) {
     // Check the user type and redirect accordingly
     if ($_SESSION["login_type"] == "admin") {
         header("Location: ./admin/adminhome.php");
@@ -42,8 +42,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     if (mysqli_num_rows($result) == 1) {
         // User exists, log them in and redirect to a welcome page
         $row = mysqli_fetch_assoc($result); // Retrieve user data
-        $_SESSION["user_id"] = $row[$id_column]; // Store user ID in the session
-        $_SESSION["user_name"] = $row["FirstName"]; // Store user name in the session
+        $_SESSION["agentID"] = $row[$id_column]; // Store user ID in the session
+        $_SESSION["username"] = $row["FirstName"]; // Store user name in the session
+        $_SESSION["lastname"] = $row["LastName"];
         $_SESSION["login_type"] = $login_type; // Store login type in the session
 
         if ($login_type == "admin") {
