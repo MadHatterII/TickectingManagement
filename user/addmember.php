@@ -219,13 +219,17 @@ $activeTicketingAgentsCount = mysqli_num_rows($result3);
 
                       
                         <li class="nav-item">
+
+                            <a href="../logout.php" class="nav-link">
+                                <i class="nav-icon far fa-circle text-danger"></i>
+                                <p>Logout</p>
+                            </a>
+                      </li>
                                 <a href="../logout.php" class="nav-link">
                                     <i class="nav-icon far fa-circle text-danger"></i>
                                     <p>Logout</p>
                                 </a>
-                            </li>
-
-
+                       
 
                     </ul>
                 </nav>
