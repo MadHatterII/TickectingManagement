@@ -118,6 +118,13 @@ include 'countcard.php';
         color: #ffffff;
         /* Change header text color as needed */
     }
+    @media (max-width: 767px) {
+        /* Styles for small screens */
+
+        .table-responsive {
+            overflow-x: auto;
+        }
+    }
 </style>
 
 <body class="hold-transition sidebar-mini layout-fixed">
@@ -263,6 +270,8 @@ include 'countcard.php';
                             </div>
                         </div>
                         <div class="card-body p-0">
+                        <div class="card-body p-0 table-responsive">
+                
                             <table class="table table-striped projects">
                                 <thead>
                                     <tr>
@@ -325,7 +334,7 @@ include 'countcard.php';
                                     ?>
                                 </tbody>
                             </table>
-
+                        </div>
 
                             <!-- Pagination links -->
                             <div class="card-tools">

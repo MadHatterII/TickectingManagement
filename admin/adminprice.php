@@ -34,6 +34,14 @@
     background-color: #3ea175; /* Header background color */
     color: #fff;
   }
+  .table-responsive th:nth-child(3),
+  .table-responsive td:nth-child(3) {
+    min-width: 150px; /* Set the minimum width for the third column (Action) */
+  }
+  .table-cottage-responsive th:nth-child(4),
+  .table-cottage-responsive td:nth-child(4) {
+    min-width: 230px; /* Set the minimum width for the fourth column (Action) */
+  }
 </style>
 
 <body class="hold-transition sidebar-mini layout-fixed">
@@ -180,8 +188,8 @@
               $result = $conn->query($sql);
 
               if ($result->num_rows > 0) {
-                  echo '<table class="table table-hover text-nowrap">
-                      <thead>
+                echo '<table class="table table-hover text-nowrap table-cottage-responsive">
+                <thead>
                           <tr>
                               <th>Cottage Type</th>
                               <th>Price Overnight</th>
