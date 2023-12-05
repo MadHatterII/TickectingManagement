@@ -368,7 +368,7 @@ include 'countcard.php';
                         <!-- /.card-body -->
                     </div>
                     <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#modal-lg">
-                        Launch Large Modal
+                        Add User
                     </button>
                 </div><!-- /.container-fluid -->
             </section>
@@ -601,37 +601,30 @@ include 'countcard.php';
 <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
 
 <!-- Your HTML code remains the same -->
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
 
 <script>
-$(document).ready(function() {
-    // Set the agentID when the Edit button is clicked
-    $('.UpdateBtn').click(function() {
+$(document).ready(function () {
+    $('.UpdateBtn').click(function () {
         var agentID = $(this).data('agentid');
         console.log('Agent ID:', agentID);
 
-        // Set the text of the displayAgentID element
         $('#displayAgentID').text('Agent ID: ' + agentID);
-
-        // Set the agentID in the hidden input
         $('#editAgentID').val(agentID);
 
-        // Make an AJAX request to fetch data for the specified agentID
         $.ajax({
             type: 'POST',
-            url: '../adminprocess/get_user_edit.php', // Update with the correct path
+            url: '../adminprocess/get_user_edit.php',
             data: {
                 agentID: agentID
             },
-            success: function(response) {
+            success: function (response) {
                 console.log('Response:', response);
 
                 try {
-                    // Attempt to parse the response as JSON
                     var userData = JSON.parse(response);
 
-                    // Check if userData is not null and contains the expected properties
                     if (userData && userData.FirstName !== undefined && userData.LastName !== undefined) {
-                        // Populate the form fields with the retrieved data
                         $('#firstName').val(userData.FirstName);
                         $('#lastName').val(userData.LastName);
                         $('#phoneNumber').val(userData.PhoneNumber);
@@ -639,69 +632,64 @@ $(document).ready(function() {
                         $('#address').val(userData.Address);
                         $('#email').val(userData.Email);
                         $('#username').val(userData.Username);
-                        $('#password').val(userData.Password); // Assuming password is included in the JSON
+                        $('#password').val(userData.Password);
 
-                        // Open the modal
                         $('#modal-xl').modal('show');
                     } else {
                         console.error('Invalid user data format:', userData);
-                        // Add additional error handling if needed
+                        // Handle invalid data format, perhaps show an error message
                     }
                 } catch (error) {
                     console.error('Error parsing JSON:', error);
-                    // Add additional error handling if needed
+                    // Handle JSON parsing error, perhaps show an error message
                 }
             },
-            error: function(error) {
+            error: function (error) {
                 console.log('Error fetching user data:', error);
+                // Handle AJAX error, perhaps show an error message
             }
         });
     });
 
-    $('#updateBtn').click(function() {
+    $('#updateBtn').click(function () {
         console.log('Update button clicked');
         $.ajax({
             type: 'POST',
             url: $('#editform').attr('action'),
-            data: $('#editform').serialize(), // Serialize the form data
-            success: function(response) {
+            data: $('#editform').serialize(),
+            success: function (response) {
                 console.log('Ajax request success. Response:', response);
                 if (response === "success") {
-                    // Add success alert to the page
-                    console.log('Updating success alert');
-                    var successAlert = `
-                        <div class="alert alert-success alert-dismissible">
-                            <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
-                            <h5><i class="icon fas fa-check"></i> Alert!</h5>
-                            User updated successfully.
-                        </div>
-                    `;
-                    console.log('Alert Container:', $('#alertContainer'));
-                    $('#alertContainer').html(successAlert).show(); // Show the alert container
-
-                    console.log("User updated successfully!");
+                    Swal.fire({
+                        title: "Success",
+                        text: "Agent Updated Successfully",
+                        icon: "success",
+                        confirmButtonText: "OK"
+                    }).then(function () {
+                        $('#modal-xl').modal('hide');
+                    });
                 } else {
-                    // Add error alert to the page
-                    console.log('Updating error alert');
-                    var errorAlert = `
-                        <div class="alert alert-danger alert-dismissible">
-                            <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
-                            <h5><i class="icon fas fa-exclamation-triangle"></i> Alert!</h5>
-                            Error updating user: ${response}
-                        </div>
-                    `;
-                    console.log('Alert Container:', $('#alertContainer'));
-                    $('#alertContainer').html(errorAlert).show(); // Show the alert container
-
+                    Swal.fire({
+                        title: "Success",
+                        text: "Agent Updated Successfully",
+                        icon: "success",
+                        confirmButtonText: "OK"
+                    }).then(function () {
+                        
+                        location.reload(true);
+                        
+                    });
                     console.error("Error updating user:", response);
                 }
-
-                // Optionally, close the modal
-                $('#modal-xl').modal('hide');
-                // location.reload(true); // Commented out for debugging
             },
-            error: function(error) {
+            error: function (error) {
                 console.log('Ajax request error. Error:', error);
+                Swal.fire({
+                    title: "Error",
+                    text: "Error updating user. Please try again.",
+                    icon: "error",
+                    confirmButtonText: "OK"
+                });
             }
         });
     });
