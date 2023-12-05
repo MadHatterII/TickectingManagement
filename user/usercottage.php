@@ -136,12 +136,12 @@ if (!isset($_SESSION['agentID'])) {
                                         <p> Ticket Form</p>
                                     </a>
                                 </li>
-                                <!-- <li class="nav-item">
-                                    <a href="adminprice.php" class="nav-link">
-                                        <i class="fas fa-money-bill nav-icon"></i>
-                                        <p>Price Management</p>
+                                <li class="nav-item">
+                                    <a href="viewticket.php" class="nav-link ">
+                                        <i class="far fa-user nav-icon"></i>
+                                        <p>View Ticket</p>
                                     </a>
-                                </li> -->
+                                </li>
 
                             </ul>
                         </li>
@@ -236,17 +236,17 @@ if (!isset($_SESSION['agentID'])) {
                             <?php
                             include '../connection/connection.php';
 
-                            // SQL query to update cottage_count based on 'OUT' status in bookings table
-                            $updateCottageCountQuery = "
-                                UPDATE cottages c
-                                SET cottage_count = (
-                                    SELECT COUNT(*) 
-                                    FROM bookings b 
-                                    WHERE b.cottage_type = c.cottage_type 
-                                    AND b.status = 'OUT'
-                                )
-                            ";
-                            $conn->query($updateCottageCountQuery);
+                            // // SQL query to update cottage_count based on 'OUT' status in bookings table
+                            // $updateCottageCountQuery = "
+                            //     UPDATE cottages c
+                            //     SET cottage_count = (
+                            //         SELECT COUNT(*) 
+                            //         FROM bookings b 
+                            //         WHERE b.cottage_type = c.cottage_type 
+                            //         AND b.status = 'OUT'
+                            //     )
+                            // ";
+                            // $conn->query($updateCottageCountQuery);
 
                             // SQL query to get updated cottage information
                             $cottageQuery = "SELECT cottage_type, cottage_count FROM cottages ";

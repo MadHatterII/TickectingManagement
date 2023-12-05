@@ -1,70 +1,76 @@
 <?php
 
+// You should also include the session start if it's not already done
+session_start();
 
-include '../userprocess/memberInsert.php';
-insertMembers();
-include '../connection/connection.php';
-$sql = "SELECT * FROM members";
-
-// Execute the query and store the result in a variable
-$result = mysqli_query($conn, $sql);
-
-// Check if the query was successful
-if (!$result) {
-    die("Error: " . mysqli_error($conn));
+// Check if the user is logged in (agentID is set in the session)
+if (!isset($_SESSION['agentID'])) {
+    // Redirect to login page or handle not logged in user
+    header("Location: index.php");
+    exit();
 }
+    include '../connection/connection.php';
+
+    //tourist count
+
+    $sql = "SELECT * FROM members";
+
+    // Execute the query and store the result in a variable
+    $result = mysqli_query($conn, $sql);
+
+    // Check if the query was successful
+    if (!$result) {
+        die("Error: " . mysqli_error($conn));
+    }
 
 
-$activeTouristCount = mysqli_num_rows($result);
+    $activeTouristCount = mysqli_num_rows($result);
 
 
-/// Total cottages
-$totalCottages = 20;
+    // cottage query
+    $totalCottages = 20;
+    $sql1 = "SELECT COUNT(cottage_type) as cottage FROM bookings WHERE status = 'IN'";
 
-// Query to get the count of booked cottages
-$sql1 = "SELECT COUNT(cottage_type) as bookedCottages FROM bookings WHERE status = 'IN'";
-$result1 = mysqli_query($conn, $sql1);
-$row1 = mysqli_fetch_assoc($result1);
-$bookedCottages = $row1['bookedCottages'];
-
-// Query to get the total number of cottages from the full_texts table
-$sql2 = "SELECT SUM(cottage_count) as totalCottageCount FROM cottages";
-$result2 = mysqli_query($conn, $sql2);
-$row2 = mysqli_fetch_assoc($result2);
-$totalCottageCount = $row2['totalCottageCount'];
-
-// Calculate available cottages
-$availableCottages = $totalCottages - $bookedCottages - $totalCottageCount;
-
-//boat count
-$sql2 = "SELECT * FROM boats";
-
-// Execute the query and store the result in a variable
-$result2 = mysqli_query($conn, $sql2);
-
-// Check if the query was successful
-if (!$result2) {
-    die("Error: " . mysqli_error($conn));
-}
+    // Execute the query and store the result in a variable
+    $result1 = mysqli_query($conn, $sql1);
+    $row = mysqli_fetch_assoc($result1);
+    $bookedCottages = $row['cottage'];
 
 
-$activeBoatsCount = mysqli_num_rows($result2);
+
+    $activeAvailableCottagesCount = $totalCottages - $bookedCottages;
+
+    //boat count
+    $sql2 = "SELECT * FROM boats";
+
+    // Execute the query and store the result in a variable
+    $result2 = mysqli_query($conn, $sql2);
+
+    // Check if the query was successful
+    if (!$result2) {
+        die("Error: " . mysqli_error($conn));
+    }
 
 
-//ticketing agent count
-$sql3 = "SELECT * FROM Useraccounts";
+    $activeBoatsCount = mysqli_num_rows($result2);
 
-// Execute the query and store the result in a variable
-$result3 = mysqli_query($conn, $sql3);
 
-// Check if the query was successful
-if (!$result3) {
-    die("Error: " . mysqli_error($conn));
-}
+    //ticketing agent count
+    $sql3 = "SELECT * FROM Useraccounts";
 
-// Count the active Ticketing Agents
-$activeTicketingAgentsCount = mysqli_num_rows($result3);
-?>
+    // Execute the query and store the result in a variable
+    $result3 = mysqli_query($conn, $sql3);
+
+    // Check if the query was successful
+    if (!$result3) {
+        die("Error: " . mysqli_error($conn));
+    }
+
+    // Count the active Ticketing Agents
+    $activeTicketingAgentsCount = mysqli_num_rows($result3);
+    ?>
+
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -176,7 +182,12 @@ $activeTicketingAgentsCount = mysqli_num_rows($result3);
                                             <p>Ticket Form</p>
                                         </a>
                                     </li>
-                                  
+                                    <li class="nav-item">
+                                    <a href="viewticket.php" class="nav-link ">
+                                        <i class="far fa-user nav-icon"></i>
+                                        <p>View Ticket</p>
+                                    </a>
+                                </li>
 
                                 </ul>
                             </li>
@@ -248,8 +259,7 @@ $activeTicketingAgentsCount = mysqli_num_rows($result3);
 
 
                 <div class="container-fluid">
-                    <!-- Small boxes (Stat box) -->
-                    <div class="row">
+                <div class="row">
                             <div class="col-lg-3 col-6">
                                 <!-- small box -->
                                 <div class="small-box bg-info">
@@ -275,7 +285,7 @@ $activeTicketingAgentsCount = mysqli_num_rows($result3);
                                     <div class="icon">
                                         <i class="fas fa-ship"></i>
                                     </div>
-                                    <a href="#" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
+                                    <a href="userboat.php" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
                                 </div>
 
                             </div>
@@ -284,13 +294,13 @@ $activeTicketingAgentsCount = mysqli_num_rows($result3);
                                 <!-- small box -->
                                 <div class="small-box bg-warning">
                                     <div class="inner">
-                                        <h3><?php echo $availableCottages; ?></h3>
+                                        <h3><?php echo $activeAvailableCottagesCount; ?></h3>
                                         <p>Available Cottage</p>
                                     </div>
                                     <div class="icon">
                                         <i class="fas fa-home"></i>
                                     </div>
-                                    <a href="#" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
+                                    <a href="usercottage.php" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
                                 </div>
 
                             </div>
@@ -310,7 +320,7 @@ $activeTicketingAgentsCount = mysqli_num_rows($result3);
 
                             </div>
                             <!-- ./col -->
-                        </div>
+                        </div> 
                     <!-- /.row -->
                     <!-- Main row -->
                     <!-- <div class="row"> -->

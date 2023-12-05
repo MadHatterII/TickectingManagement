@@ -179,6 +179,12 @@ if (!isset($_SESSION['agentID'])) {
                                             <p>Ticket Form</p>
                                         </a>
                                     </li>
+                                    <li class="nav-item">
+                                    <a href="viewticket.php" class="nav-link ">
+                                        <i class="far fa-user nav-icon"></i>
+                                        <p>View Ticket</p>
+                                    </a>
+                                </li>
                                     
                                 </ul>
                             </li>

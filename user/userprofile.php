@@ -225,6 +225,12 @@ if (!isset($_SESSION['agentID'])) {
                                         <p>Ticket Form</p>
                                     </a>
                                 </li>
+                                <li class="nav-item">
+                                    <a href="viewticket.php" class="nav-link ">
+                                        <i class="far fa-user nav-icon"></i>
+                                        <p>View Ticket</p>
+                                    </a>
+                                </li>
 
                             </ul>
                         </li>
@@ -415,7 +421,7 @@ if (!isset($_SESSION['agentID'])) {
             </div>
             <div class="modal-body">
                 <!-- Your form content goes here -->
-                <form action="../userprocess/edit_profile.php" method="post" onsubmit="submitForm(event)">
+                <form action="../userprocess/edit_profile.php" method="post" ">
                     <div class="row">
                         <div class="col-md-6">
                             <div class="form-group">
@@ -475,7 +481,7 @@ if (!isset($_SESSION['agentID'])) {
 
                     <div class="modal-footer justify-content-between">
                         <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                        <button type="submit" class="btn btn-primary">Save changes</button>
+                        <button type="submit" name="submit" class="btn btn-primary">Save changes</button>
                     </div>
                 </form>
             </div>
@@ -488,28 +494,7 @@ if (!isset($_SESSION['agentID'])) {
 
 
 <script>
-    function submitForm(event) {
-        event.preventDefault(); // Prevent the default form submission behavior
-
-        // Your existing JavaScript code to show the toast goes here
-        var Toast = Swal.mixin({
-            toast: true,
-            position: 'top-end',
-            showConfirmButton: false,
-            timer: 3000
-        });
-
-        Toast.fire({
-            icon: 'success',
-            title: 'Profile updated successfully'
-        });
-
-        // Optionally, you can add additional logic here before submitting the form via AJAX or other means
-        // ...
-
-        // Submit the form (if needed)
-        // event.target.submit();
-    }
+  
 </script>
 
 

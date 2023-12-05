@@ -1,9 +1,16 @@
 <?php
-include '../connection/connection.php';
+// Start the session
+session_start();
+
+// Include your database connection file
+include_once("../connection/connection.php");
 
 // Check if the form is submitted
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    // Assuming you have sanitized your input data (for demonstration purposes)
+if(isset($_POST['submit'])) {
+    // Get the session agentID
+    $agentID = $_SESSION['agentID'];
+
+    // Get form data
     $firstName = $_POST['firstName'];
     $lastName = $_POST['lastName'];
     $phoneNumber = $_POST['phoneNumber'];
@@ -13,49 +20,33 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $username = $_POST['username'];
     $password = $_POST['password'];
 
-    // Assuming you have the agentID in the session
-    if (isset($_SESSION['agentID'])) {
-        $agentID = $_SESSION['agentID'];
+    // Perform validation and sanitize input data here
 
-        // Update the user's profile in the 'useraccounts' table
-        $sql = "UPDATE useraccounts SET
-                FirstName = '$firstName',
-                LastName = '$lastName',
-                PhoneNumber = '$phoneNumber',
-                Birthdate = '$birthdate',
-                Address = '$address',
-                Email = '$email',
-                Username = '$username',
-                Password = '$password'
-                WHERE agentID = $agentID";
+    // Update the user profile in the database
+    $sql = "UPDATE useraccounts SET 
+            FirstName = '$firstName',
+            LastName = '$lastName',
+            PhoneNumber = '$phoneNumber',
+            Birthdate = '$birthdate',
+            Address = '$address',
+            Email = '$email',
+            Username = '$username',
+            Password = '$password'
+            WHERE agentID = '$agentID'";
 
-        if ($conn->query($sql) === TRUE) {
-            // Profile updated successfully, trigger success toast
-            echo "
-            <script>
-                $(document).ready(function() {
-                    var Toast = Swal.mixin({
-                        toast: true,
-                        position: 'top-end',
-                        showConfirmButton: false,
-                        timer: 3000
-                    });
+    $result = mysqli_query($conn, $sql);
 
-                    Toast.fire({
-                        icon: 'success',
-                        title: 'Profile updated successfully'
-                    });
-                });
-            </script>";
-        } else {
-            echo "Error updating profile: " . $conn->error;
-        }
+    if ($result) {
+        // Update successful
+        // Redirect to userprofile.php
+        header("Location: ../user/userprofile.php");
+        exit();
     } else {
-        echo "Agent ID not set in the session";
+        // Update failed
+        echo "Error updating profile: " . mysqli_error($conn);
     }
-} else {
-    echo "Invalid request";
-}
 
-$conn->close();
+    // Close the database connection
+    mysqli_close($conn);
+}
 ?>

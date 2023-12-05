@@ -24,12 +24,76 @@
     <link rel="stylesheet" href="../plugins/daterangepicker/daterangepicker.css">
     <!-- summernote -->
     <link rel="stylesheet" href="../plugins/summernote/summernote-bs4.min.css">
+    <link rel="stylesheet" type="text/css" href="../userprocess/print.css" media="print">
 </head>
 <style>
     .sidebar {
         background: rgb(13, 126, 194);
         background: linear-gradient(0deg, rgba(13, 126, 194, .453321321) 58%, rgba(208, 170, 89, 0.8548669467787114) 77%);
     }
+
+
+
+/* Ticket Styles */
+.ticket {
+    background-color: #f5f5f5;
+    border: 1px solid #ddd;
+    padding: 20px;
+    margin: 20px;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    max-height: 300px; /* Set a fixed height for the ticket */
+    overflow-y: auto; /* Add a vertical scrollbar if content exceeds the height */
+}
+
+.ticket h4, .ticket h5 {
+    color: #333;
+}
+
+.ticket p {
+    margin: 10px 0;
+    font-weight: bold; /* Make only the <p> tags bold */
+}
+
+/* Booking Details Styles */
+.booking-details {
+    border-top: 1px solid #ddd;
+    padding-top: 10px;
+    margin-top: 10px;
+    max-height: 200px; /* Set a fixed height for the booking details */
+    overflow-y: auto; /* Add a vertical scrollbar if content exceeds the height */
+}
+
+.booking-details h5 {
+    color: #007bff;
+}
+
+.booking-details p {
+    margin: 10px 0;
+    font-weight: bold; /* Make only the <p> tags bold */
+}
+
+/* Example: Style for Buttons */
+.btn {
+    display: inline-block;
+    padding: 8px 16px;
+    font-size: 14px;
+    text-align: center;
+    text-decoration: none;
+    cursor: pointer;
+    border-radius: 4px;
+    color: #fff;
+}
+
+.btn-primary {
+    background-color: #007bff;
+}
+
+.btn-primary:hover {
+    background-color: #0056b3;
+}
+
+
 </style>
 
 <body class="hold-transition sidebar-mini layout-fixed">
@@ -51,29 +115,29 @@
                 <span class="brand-text font-weight-light">WanderLust</span>
             </a>
 
-             <!-- Sidebar -->
-             <div class="sidebar">
+            <!-- Sidebar -->
+            <div class="sidebar">
                 <!-- Sidebar user panel (optional) -->
                 <div class="user-panel mt-3 pb-3 mb-3 d-flex">
                     <div class="image">
                         <img src="../img/canigs.png" class="img-circle elevation-2" alt="User Image">
                     </div>
                     <?php
-                        // Start or resume the session
-                
+                    // Start or resume the session
 
-                        // Check if agentID and Username are set in the session
-                        if (isset($_SESSION['agentID']) && isset($_SESSION['username'])&& isset($_SESSION['lastname'])) {
-                            // Display the user's name (agentID) and username from the session
-                            echo '<div class="info">
-                            <a href="#" class="d-block">'. $_SESSION['username'] .' '. $_SESSION['lastname'] . '</a>
+
+                    // Check if agentID and Username are set in the session
+                    if (isset($_SESSION['agentID']) && isset($_SESSION['username']) && isset($_SESSION['lastname'])) {
+                        // Display the user's name (agentID) and username from the session
+                        echo '<div class="info">
+                            <a href="#" class="d-block">' . $_SESSION['username'] . ' ' . $_SESSION['lastname'] . '</a>
                             </div>';
-                        } else {
-                            // Default text if agentID or Username is not set
-                            echo '<a href="#" class="d-block">Guest</a>';
-                        }
-                        ?>
-                    
+                    } else {
+                        // Default text if agentID or Username is not set
+                        echo '<a href="#" class="d-block">Guest</a>';
+                    }
+                    ?>
+
                 </div>
 
 
@@ -123,7 +187,7 @@
                             </a>
                             <ul class="nav nav-treeview">
                                 <li class="nav-item">
-                                    <a href="userboat.php" class="nav-link active">
+                                    <a href="userboat.php" class="nav-link ">
                                         <i class="far fa-circle nav-icon"></i>
                                         <p>Boat</p>
                                     </a>
@@ -230,17 +294,17 @@
 
                         // Display table
                         echo "<table class='table table-bordered table-hover'>
-                            <thead>
-                                <tr>
-                                    <th>#</th>
-                                    <th>Group Name</th>
-                                    <th>Entrance Fee</th>
-                                    <th>Cottage Fee</th>
-                                    <th>Total Amount</th>
-                                    <th>Action</th>
-                                </tr>
-                            </thead>
-                            <tbody>";
+                        <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>Group Name</th>
+                                <th>Entrance Fee</th>
+                                <th>Cottage Fee</th>
+                                <th>Total Amount</th>
+                                <th>View Details</th>
+                            </tr>
+                        </thead>
+                        <tbody>";
 
                         if ($result->num_rows > 0) {
                             while ($row = $result->fetch_assoc()) {
@@ -250,13 +314,17 @@
                                 echo "<td>₱" . $row["entryFee"] . "</td>";
                                 echo "<td>₱" . $row["cottageFee"] . "</td>";
                                 echo "<td>₱" . $row["totalAmount"] . "</td>";
+                                echo "<td><button class='btn btn-primary' data-toggle='modal' data-target='#modal-default' onclick='handleButtonClick(\"" . $row["groupName"] . "\")'>Details</button></td>";
+                                echo "</tr>";
+                                
                                 echo "</tr>";
                             }
                         } else {
-                            echo "<tr><td colspan='5'>No data available</td></tr>";
+                            echo "<tr><td colspan='6'>No data available</td></tr>";
                         }
 
                         echo "</tbody></table>";
+
 
                         // Display pagination
                         echo "<div class='card-footer clearfix'>
@@ -304,10 +372,60 @@
 
 
 
+    <div class="modal fade print-modal" id="modal-default">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title">Ticket Details</h4>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div id="modal-content-placeholder">
+                        <!-- Content will be dynamically loaded here -->
+                    </div>
+                </div>
+
+                <div class="modal-footer justify-content-between">
+                    <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary" onclick="printTicket()">Print</button>
+                </div>
+            </div>
+            <!-- /.modal-content -->
+        </div>
+        <!-- /.modal-dialog -->
+    </div>
+    <!-- /.modal -->
 
 
 
+    <!-- Add this script just before the closing </body> tag in your HTML file -->
+    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+    <script>
+  function handleButtonClick(groupName) {
+    // Make an AJAX request to fetch ticket details
+    $.ajax({
+      url: '../userprocess/get_ticket_details.php', // Replace with your server-side script to fetch ticket details
+      type: 'GET',
+      data: { groupName: groupName }, // Pass groupName instead of id
+      success: function(data) {
+        // Update modal content with fetched data
+        $('#modal-content-placeholder').html(data);
 
+        // Show the modal
+        $('#modal-default').modal('show');
+      },
+      error: function() {
+        alert('Error fetching ticket details.');
+      }
+    });
+  }
+  function printTicket() {
+        // Open the print dialog
+        window.print();
+    }
+</script>
 
 
 
