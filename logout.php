@@ -9,6 +9,23 @@ $_SESSION = array();
 session_destroy();
 
 // Redirect to the login page (you can change the location as needed)
-header("Location: index.php");
+echo '<html>
+<head>
+  <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/sweetalert2@10">
+</head>
+<body>
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
+  <script>
+    Swal.fire({
+      title: "Success!",
+      text: "Logged Out Successfully",
+      icon: "success",
+      confirmButtonText: "OK"
+    }).then(function() {
+      window.location.href = "index.php";
+    });
+  </script>
+</body>
+</html>';
 exit;
 ?>

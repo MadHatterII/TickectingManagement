@@ -48,13 +48,66 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $_SESSION["login_type"] = $login_type; // Store login type in the session
 
         if ($login_type == "admin") {
-            header("Location: ./admin/adminhome.php");
+            echo '<html>
+            <head>
+              <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/sweetalert2@10">
+            </head>
+            <body>
+              <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
+              <script>
+                Swal.fire({
+                  title: "Success!",
+                  text: "Admin logged in successfully",
+                  icon: "success",
+                  confirmButtonText: "OK"
+                }).then(function() {
+                  window.location.href = "admin/adminhome.php";
+                });
+              </script>
+            </body>
+          </html>';
+            // header("Location: ./admin/adminhome.php");
         } elseif ($login_type == "ticketing_agent") {
-            header("Location: ./user/userdash.php");
+            echo '<html>
+            <head>
+              <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/sweetalert2@10">
+            </head>
+            <body>
+              <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
+              <script>
+                Swal.fire({
+                  title: "Success!",
+                  text: "User logged in successfully ",
+                  icon: "success",
+                  confirmButtonText: "OK"
+                }).then(function() {
+                  window.location.href = "user/userdash.php";
+                });
+              </script>
+            </body>
+          </html>';
+            // header("Location: ./user/userdash.php");
         }
         exit;
     } else {
-        $login_error = "Invalid user or password. Please try again.";
+         echo '<html>
+        <head>
+          <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/sweetalert2@10">
+        </head>
+        <body>
+          <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
+          <script>
+            Swal.fire({
+              title: "Error!",
+              text: "Invalid Username or Password",
+              icon: "error",
+              confirmButtonText: "OK"
+            }).then(function() {
+              window.location.href = "index.php";
+            });
+          </script>
+        </body>
+      </html>';
     }
 }
 ?>

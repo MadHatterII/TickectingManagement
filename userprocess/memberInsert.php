@@ -5,8 +5,7 @@ function insertMembers(){
  if (isset($_POST['submitMembers'])) {
     $groupName = $_GET['groupName'];
     $memberCount = $_POST['memberCount'];
-    echo "Group Name from URL: " . $groupName;
- 
+   
     $servername = "localhost";
     $username = "root";
     $password = "";
@@ -53,10 +52,24 @@ function insertMembers(){
         mysqli_stmt_bind_param($log_stmt, "iss", $user_id, $user_description, $timestamp);
         mysqli_stmt_execute($log_stmt);
 
-        echo "<script>
-        alert('Ticket completed successfully!');
-        window.location.href = 'ticket.php'; 
-      </script>";
+        echo '<html>
+        <head>
+          <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/sweetalert2@10">
+        </head>
+        <body>
+          <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
+          <script>
+            Swal.fire({
+              title: "Success",
+              text: "Members Inserted Successfully",
+              icon: "success",
+              confirmButtonText: "OK"
+            }).then(function() {
+              window.location.href = "../user/userdash.php"; 
+            });
+          </script>
+        </body>
+      </html>';
     } catch (Exception $e) {
         // If an exception was thrown, roll back the transaction
         $conn->rollback();

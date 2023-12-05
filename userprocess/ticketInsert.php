@@ -38,22 +38,61 @@ if (isset($_POST['submit'])) {
 
     // Check if the insert was successful
     if ($result) {
-        // Update the cottage_count for the selected cottage_type
-        $updateCottageCountSql = "UPDATE cottages SET cottage_count = cottage_count - 1 WHERE cottage_type = '$cottageType'";
-        $conn->query($updateCottageCountSql);
-
-        // If successful, display an alert and redirect
-        $encodedGroupName = urlencode($groupName);
-        echo "<script>
-                alert('Ticket submitted. Add members.');
-                window.location.href = '../user/addmember.php?groupName=$encodedGroupName'; 
-              </script>";
+      // Update the cottage_count for the selected cottage_type
+      $updateCottageCountSql = "UPDATE cottages SET cottage_count = cottage_count - 1 WHERE cottage_type = ?";
+      
+      // Use prepared statements to prevent SQL injection
+      $stmt = $conn->prepare($updateCottageCountSql);
+      $stmt->bind_param("s", $cottageType);
+      $stmt->execute();
+      $stmt->close();
+  
+      // If successful, display an alert and redirect
+      $encodedGroupName = urlencode($groupName);
+      ?>
+      <!DOCTYPE html>
+      <html>
+      <head>
+          <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/sweetalert2@10">
+      </head>
+      <body>
+          <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
+          <script>
+              Swal.fire({
+                  title: "Success!",
+                  text: "Ticket submitted. Add members.",
+                  icon: "success", // Change the icon to "success"
+                  confirmButtonText: "OK"
+              }).then(function() {
+                  window.location.href = "../user/addmember.php?groupName=<?php echo $encodedGroupName; ?>";
+              });
+          </script>
+      </body>
+      </html>
+      <?php
+        
+       
     } else {
         // If not successful, display an alert and stay on the same page
-        echo "<script>
-                alert('Error creating a ticket!');
-                window.location.href = '../user/userticket.php'; 
-              </script>";
+        echo '<html>
+        <head>
+          <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/sweetalert2@10">
+        </head>
+        <body>
+          <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
+          <script>
+            Swal.fire({
+              title: "Error!",
+              text: "Error inserting ticket",
+              icon: "error",
+              confirmButtonText: "OK"
+            }).then(function() {
+              window.location.href = "../user/userticket.php"; 
+            });
+          </script>
+        </body>
+      </html>';
+     
     }
 
     // Close the database connection

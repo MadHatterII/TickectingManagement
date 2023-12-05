@@ -34,7 +34,26 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $stmt->bind_param("sssssssssb", $firstName, $lastName, $username, $birthdate, $email, $password, $phoneNumber,$role, $address, $imageData);
     
     if ($stmt->execute()) {
-        header("Location: ../admin/adminticket.php");
+
+        echo '<html>
+        <head>
+          <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/sweetalert2@10">
+        </head>
+        <body>
+          <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
+          <script>
+            Swal.fire({
+              title: "Success",
+              text: "User Added Successfully",
+              icon: "success",
+              confirmButtonText: "OK"
+            }).then(function() {
+              window.location.href = "../admin/adminticket.php"; 
+            });
+          </script>
+        </body>
+      </html>';
+
     } else {
         $response['error'] = "Error adding record: " . $stmt->error;
     }
